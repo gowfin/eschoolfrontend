@@ -1,0 +1,38 @@
+            export const getOrgName = (companyName) => {
+               if (companyName.toUpperCase() === 'BLESSED') {
+                   return 'Blessed Women Microfinance';
+               }
+               else if (companyName.toUpperCase() === '2HAPI') {
+                    return 'Helping hands for Active People Initiative';
+                }
+                else if (companyName.toUpperCase() === 'RELIABLE') {
+                    return 'RELIABLE SUPPORT FOR COMMUNITY DEVELOPMENT';
+                }
+                else if (companyName.toUpperCase() === 'BRIGHTSTAR') {
+                    return 'BRIGHT STARS EMPOWERMENT INITIATIVE';
+                }
+                else if (companyName.toUpperCase() === 'UKSTAR') {
+                    return 'UKSTAR MICRO SERVICES';
+                }
+                else if (companyName.toUpperCase() === 'BRILLIANT') {
+                    return 'BRILLIANT HOPE AND TOUCH EMPOWERMENT CENTRE';
+                }
+                else if (companyName.toUpperCase() === 'IVYESSENTIAL'  ) {
+                    return 'IVY ESSENTIAL LIMITED';
+                }
+                else if (companyName.toUpperCase() === '/'  ) {
+                    return 'Macmay Group';
+                }
+                else if (companyName.toUpperCase() === '') {
+                    return 'Macmay Group';
+                    
+                }
+                else if (companyName.toUpperCase() === 'DUMMY') {
+                    return 'Macmay Group';
+                    
+                }
+                else {
+                   return 'Macmay Group';
+                  
+               }
+           };

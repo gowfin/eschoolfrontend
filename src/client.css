@@ -1,0 +1,89 @@
+/* Global styling for form */
+form {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    margin: 0 auto;
+    max-width: 600px; /* Adjust based on your desired width */
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    font-size:'2em'
+  }
+  
+ 
+  
+  img {
+    display: block;
+    margin-top: 5px;
+    width: 5%;
+    height: 5%;
+    border-radius: 10px;
+  }
+  input, select, button {
+    width: 100%;
+    padding: 10px;
+    border: 2px solid #ccc;
+    border-radius: 4px;
+  }
+  
+  button {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    cursor: pointer;
+    padding: 10px;
+    font-size: 16px;
+  }
+  
+  button:hover {
+    background-color: #45a049;
+  }
+  
+  /* Two-column layout for wider screens */
+  @media (min-width: 768px) {
+    form label {
+      width: 48%;
+    }
+  
+    /* Make image upload and full-width fields take 100% width */
+    label:nth-child(odd) {
+      width: 100%;
+    }
+  }
+  
+  /* Full-width layout for mobile */
+  @media (max-width: 767px) {
+    form label {
+      width: 100%;
+    }
+  }
+  .input-with-button {
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+  
+  .input-with-button input {
+    width: 100%;
+    padding-right: 100px; /* Adjust this based on button width */
+    box-sizing: border-box;
+  }
+  
+  .input-with-button .search-btn {
+    position: absolute;
+    right: 0;
+    border: none;
+    background-color:#90EE90 ;
+    color: white;
+    padding: 10px;
+    cursor: pointer;
+    width:10%;
+    height: 70%;
+    border-radius: 0 4px 4px 0;
+  }
+  
+  .input-with-button .search-btn:hover {
+    background-color: #007bff;
+  }

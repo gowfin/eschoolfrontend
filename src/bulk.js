@@ -1,0 +1,367 @@
+
+
+
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import loadingGif from './loading.gif'; // Your loading gif file
+import './bulk.css';
+// import { localhost } from './env.js';
+
+const Bulk = ({state}) => {
+    const {localhost}= state || 'localhost:3000';
+    const [code, setCode] = useState('');
+    const [loans, setLoans] = useState([]);
+    const [deposits, setDeposits] = useState([]); // State for deposits
+    const [searching, setSearching] = useState(false);
+    const [posting, setPosting] = useState(false);
+    const [message, setMessage] = useState('');
+    const [repayAmounts, setRepayAmounts] = useState({});
+    const [depositAmounts, setDepositAmounts] = useState({});
+    const [activeTab, setActiveTab] = useState('loans'); // State for active tab
+    const [selectedRow, setSelectedRow] = useState(null);
+    const {products,userid} =state||{};
+   
+
+    useEffect(() => {
+        const storedCode = localStorage.getItem('groupCode');
+        // console.log('the product:',products);
+   
+        if (storedCode) {
+            setCode(storedCode);
+        }
+    }, []);
+//Handle table select by clicking
+const handleRowClick = (id) => {
+    setSelectedRow(id); // Set the selected row ID
+};
+    const fetchLoans = async () => {
+        try {
+            setSearching(true);
+            setMessage('');
+            const response = await axios.post(`${localhost}/getbulkLoans`, { code });
+           const data = response.data;
+         
+            // Combine products and data when they are both available
+    const combined = data.map(loan=> {
+        const matchingProduct = products.find(product =>
+            loan.loanproduct.trim() === product.id.trim(),
+          
+        );
+  
+        return {
+          ...loan,
+          code: matchingProduct ? matchingProduct.code : null
+        };
+      }).filter(item => item.code !== null); // Filter out items without a code
+     setLoans(combined);
+            // setLoans(combined.filter(item => item.code !== null));
+            console.log(loans,combined);
+            localStorage.setItem('groupCode', code);
+        } catch (error) {
+            console.error('Error fetching loans:', error);
+            setMessage(error.message);
+        }
+        setSearching(false);
+    };
+
+    const fetchDeposits = async () => {
+        // Replace this with your actual API call to fetch deposits
+        try {
+            setSearching(true);
+            setMessage('');
+            const response = await axios.post(`${localhost}/getbulkdeposits`, { code }); // Example endpoint
+            const data = response.data;
+                // Combine products and data when they are both available
+    const combined = data.map(deposit => {
+      
+        const matchingProduct = products.find(product =>
+          deposit.PID === product.id 
+        );
+ 
+        return {
+          ...deposit,
+          code: matchingProduct ? matchingProduct.code : null
+        };
+      }).filter(item => item.code !== null); // Filter out items without a code
+      
+            setDeposits(combined);
+            
+           
+        } catch (error) {
+            console.error('Error fetching deposits:', error);
+            setMessage(error.message);
+        }
+        setSearching(false);
+    };
+
+    const handleKeyPress = (e) => {
+        if (e.key === 'Enter') {
+            if (activeTab === 'loans') {
+                fetchLoans();
+            } else {
+                fetchDeposits();
+            }
+        }
+    };
+
+    const handleTabChange = (tab) => {
+        setActiveTab(tab);
+        if (tab === 'loans') {
+            fetchLoans();
+        } else {
+            fetchDeposits();
+        }
+       
+    };
+    const handleRepayAmountChange = (loanID, value) => {
+                setRepayAmounts((prev) => ({ ...prev, [loanID]: value }));
+            };
+const handleDepositAmountChange = (AccountID, value) => {
+                setDepositAmounts((prev) => ({ ...prev, [AccountID]: value }));
+            };
+            const sumValues = (data) => {
+                return Object.values(data).reduce((total, value) => {
+                    // Remove commas and parse to float
+
+                    const numericValue =value? parseFloat(value.replace(/,/g, '')): 0;
+            
+                    // Check if numericValue is a valid number
+                    if (!isNaN(numericValue)) {
+                        return total + numericValue; // Add to total if valid number
+                    } else {
+                        return total; // Return total unchanged if not a valid number
+                    }
+                }, 0);
+            };
+            const handlePosting=async()=>{
+            setPosting(true);
+            setMessage('');
+            // Merging for deposit
+        const depositToPost = deposits.reduce((acc, item) => {
+         const accountValue = depositAmounts[item.AccountID];
+           if (accountValue && accountValue !== "0" && accountValue.trim() !== "") {
+               acc.push({
+                 ...item,
+                 accountValue // Add the corresponding value from user entry
+               });
+         }
+          return acc;
+         }, []);
+            // Merging for repayment
+            const repayToPost = loans.reduce((acc, item) => {
+                const accountValue = repayAmounts[item.loanID];
+                if (accountValue && accountValue !== "0" && accountValue.trim() !== "") {
+                    acc.push({
+                        ...item,
+                        accountValue // Add the corresponding value 
+                    });
+                }
+                return acc;
+            }, []);
+            console.log("Deposit to Post:",depositToPost);
+            console.log("---------------------------------");
+            console.log("Repayment Amount:",repayToPost);
+            setMessage('');
+                // Replace this with your actual API call to fetch deposits
+                try {
+                    setSearching(true);
+                    // setMessage('');
+                    const response = await axios.post(`${localhost}/postbulkdepositsrepayments`, { depositToPost,repayToPost,code,userid }); 
+                    const result = response.data;
+                     console.log(result);
+                   setMessage('Deposit and loans posted successfully');
+                } catch (error) {
+                    console.error('Error fetching deposits:', error);
+                    setMessage(error.message);
+                    
+                }
+               
+           
+                    
+           
+            setPosting(false);
+            setSearching(false);
+           // reset depositAmounts
+           setDepositAmounts((prev) => {
+            const newAmounts = { ...prev };
+            Object.keys(newAmounts).forEach(AccountID => {
+                newAmounts[AccountID] = 0; // Set each value to 0
+            });
+            return newAmounts;
+        });
+        // reset RepayAmounts 
+            setRepayAmounts((prev) => {
+                const newAmounts = { ...prev };
+                Object.keys(newAmounts).forEach(loanID => {
+                    newAmounts[loanID] = 0; // Set each value to 0
+                });
+                return newAmounts;
+            });
+
+            }
+    return (
+        <div>
+            {message && <p className="msg" style={{ color: message.includes('successful') ? 'green' : 'red' }}>{message}</p>}
+            {searching ? <div><img src={loadingGif} alt="Loading..." style={{ width: '7%', height: '7%' }} />Searching</div> : ''}
+
+            <h1>Bulk Transaction Management</h1>
+
+            <div className="tab-container">
+                <button onClick={() => handleTabChange('loans')} style={{ backgroundColor: activeTab === 'loans' ? '#4CAF50' : '#fff', color: activeTab === 'loans' ? '#fff' : '#000' }}>Loans</button>
+                <button onClick={() => handleTabChange('deposits')} style={{ backgroundColor: activeTab === 'deposits' ? '#4CAF50' : '#fff', color: activeTab === 'deposits' ? '#fff' : '#000' }}>Deposits</button>
+            </div>
+
+            <input
+                type="text"
+                value={code}
+                onChange={(e) => setCode(e.target.value)}
+                onKeyPress={handleKeyPress}
+                placeholder="Enter Group Code"
+                autoComplete="on"
+            />
+
+            {activeTab === 'loans' && (
+                <div>
+                    <button onClick={fetchLoans}>Find Group Loans</button>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ClientID</th>
+                                <th>LoanID</th>
+                                <th>ClientName</th>
+                                <th>Product</th>
+                                <th>Balance</th>
+                                <th>Expected</th>
+                                <th>Repay Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {loans.map((loan, index) => (
+                                <tr key={index} onClick={() => handleRowClick(index)}
+                                onFocus={() => handleRowClick(index)}
+                                style={{
+                                   
+                                    backgroundColor: selectedRow === index ? 'rgba(144, 238, 144, 0.5)' : 'transparent', // Light transparent green
+                                }}>
+                                    <td>{loan.custno}</td>
+                                    <td>{loan.loanID}</td>
+                                    <td>{loan.name}</td>
+                                    <td>{loan.loanproduct}</td>
+                                    <td>{loan.outstandingbal}</td>
+                                    <td>{loan.expected}</td>
+                                    <td>
+                                        <input
+                                            type="text"
+                                            className="repay-input"
+                                            value={repayAmounts[loan.loanID] || ''}
+                                            onFocus={(e) => e.target.value = repayAmounts[loan.loanID] || ''}
+                                            onBlur={(e) => {
+                                                const value = parseFloat(e.target.value.replace(/,/g, ''));
+                                                e.target.value = isNaN(value) ? '' : value.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+                                                handleRepayAmountChange(loan.loanID, e.target.value);
+                                            }}
+                                            onChange={(e) => {
+                                                const inputValue = e.target.value.replace(/,/g, '');
+                                                handleRepayAmountChange(loan.loanID, inputValue);
+                                            }}
+                                            placeholder="Enter amount"
+                                        />
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
+            )}
+
+            {activeTab === 'deposits' && (
+                <div>
+                    <button onClick={fetchDeposits}>Find Group Deposits</button>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>CustNo</th>
+                                <th>AccountID</th>
+                                <th>AccountName</th>
+                                <th>ProductID</th>
+                                <th>Balance</th>
+                                <th>Amount</th>
+                                
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {deposits.map((deposit, index) => (
+                                <tr key={index} onClick={() => handleRowClick(index)}
+                                onFocus={() => handleRowClick(index)}
+                                style={{
+                                    
+                                    backgroundColor: selectedRow === index ? 'rgba(144, 238, 144, 0.5)' : 'transparent', // Light transparent green
+                                }}>
+                                    <td>{deposit.CustNo}</td>
+                                    <td>{deposit.AccountID}</td>
+                                    <td>{deposit.name}</td>
+                                    <td>{deposit.ProductID}</td>
+                                    <td>{deposit.RunningBal}</td>
+                                    <td><input
+                                            type="text"
+                                            className="deposit-input"
+                                            value={depositAmounts[deposit.AccountID] || ''}
+                                            onFocus={(e) => e.target.value = deposits[deposit.AccountID] || ''}
+                                            onBlur={(e) => {
+                                                const value = parseFloat(e.target.value.replace(/,/g, ''));
+                                                e.target.value = isNaN(value) ? '' : value.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+                                                handleDepositAmountChange(deposit.AccountID, e.target.value);
+                                            }}
+                                            onChange={(e) => {
+                                                const inputValue = e.target.value.replace(/,/g, '');
+                                                handleDepositAmountChange(deposit.AccountID, inputValue);
+                                            }}
+                                            placeholder="Enter amount"
+                                        /></td>
+                                    
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
+            )}
+            <div style={styles.container}>
+            <label style={styles.label}>Analysis</label>
+            <h2 style={styles.heading}>Total Deposit: {sumValues(depositAmounts).toFixed(2)}</h2>
+            <h2 style={styles.heading1}>Total Repayment: {sumValues(repayAmounts).toFixed(2)}</h2>
+            <h2 >Total Collection: {parseFloat(sumValues(depositAmounts).toFixed(2))+parseFloat(sumValues(repayAmounts).toFixed(2))}<button onClick={handlePosting}>{posting ? <div><img src={loadingGif} alt="Loading..." style={{ width: '1em', height: '1em' }} />Searching</div> : 'Submit to Workflow'}
+            </button></h2> 
+        </div>
+        </div>
+    );
+
+    
+};
+const styles = {
+    container: {
+        fontSize: '0.7em', // Adjusted font size for better readability
+        border: '2% double gray', // Double border
+        padding: '2px', // Padding inside the box
+        borderRadius: '12px', // Rounded corners
+        backgroundColor: '#f9f9f9', // Light background color
+        boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)', // Subtle shadow for depth
+        margin: '20px auto', // Centered with margin
+        maxWidth: 'auto', // Max width for the container
+    },
+    label: {
+        fontWeight: 'bold',
+        display: 'block',
+        marginBottom: '10px',
+    },
+    heading: {
+        margin: '5px 0',
+        color: '#90EE90', // Dark color for text
+       
+    },
+    heading1: {
+        margin: '5px 0',
+        color: '#FA8072', 
+        
+    }
+};
+export default Bulk;

@@ -1,0 +1,180 @@
+
+/* Container for the entire login section */
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #f7f7f7;
+  padding: 20px; /* Add padding for smaller screens */
+}
+
+/* Image section to display the side image */
+.image-section img {
+  width: 400px;
+  height: auto;
+  border-radius: 50%;
+}
+
+/* Form section with some padding */
+.form-section {
+  background-color: rgb(229, 236, 221);
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+  margin-left: 20px;
+  width: 300px;
+}
+
+
+/* Fancy button styling */
+.fancy-button {
+  width: 100%;
+  padding: 12px;
+  margin-top: 10px;
+  background-color: #28a745;
+  border: none;
+  color: white;
+  font-size: 18px;
+  font-weight: bold;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.fancy-button:hover {
+  background-color: #218838;
+}
+
+/* Message styling */
+.message {
+  margin-top: 15px;
+  color: #28a745;
+  font-weight: bold;
+}
+
+/* Responsive design */
+@media screen and (max-width: 768px) {
+  .login-container {
+    flex-direction: column;
+    padding: 10px; /* Add padding for mobile screens */
+  }
+
+  .image-section {
+    margin-bottom: 20px;
+  }
+
+  .image-section img {
+    width: 100%;
+    max-width: 300px; /* Limit max width for smaller screens */
+    height: auto;
+  }
+
+  .form-section {
+    width: 90%;
+    max-width: 350px;
+    margin: 0; /* Center on smaller screens */
+  }
+}
+
+/* Additional smaller screen adjustments */
+@media screen and (max-width: 480px) {
+  .form-section {
+    padding: 20px;
+  }
+
+  input, .fancy-button {
+    font-size: 20px; /* Adjust font size for smaller screens */
+  }
+
+  .fancy-button {
+    padding: 10px;
+  }
+}
+
+/* Container for the password input and icon */
+.password-field {
+  width: 100%;
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+.username-field {
+  width: 100%;
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+/* Password input field */
+.password-field input,.username-field input {
+  width: 100%;
+  padding-right: 40px; /* Add space for the icon */
+  padding: 10px;
+  margin: 10px 0;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
+  background-color: #fafafa;
+  box-shadow: inset 1px 1px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Button to toggle password visibility */
+.toggle-password {
+  width: 15%;
+  position: absolute;
+  right: 1%;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 18px;
+  color: #666;
+  outline: none;
+}
+
+/* Modal Background */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+/* Modal Content */
+.modal-content {
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  width: 300px;
+  text-align: center;
+  z-index: 1001;
+}
+
+/* Styling for list */
+ul {
+  list-style: none;
+  padding: 0;
+}
+
+ul li {
+  margin: 10px 0;
+}
+
+/* General button styling */
+button {
+  padding: 8px 16px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #45a049;
+}

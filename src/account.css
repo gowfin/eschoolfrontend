@@ -1,0 +1,158 @@
+.account-page {
+    width: 100%;
+    padding: 20px;
+}
+
+.top-div {
+    margin-bottom: 1%;
+    display: flex;
+    flex-direction: column;
+}
+.search-div {
+    margin-bottom: 10px;
+    display: flex;
+    flex-direction: row;
+}
+
+.input-group {
+    margin-bottom: 5px;
+    display: inline-block
+}
+
+.custno-input,
+.account-name-input,
+.group-name-input {
+    padding: 1%;
+    margin-top:2%;
+    margin-right: 4%;
+    width: 200px;
+}
+.group-name-input{
+    width: 20%;
+}
+.custno-button {
+    padding: 10px 20px;
+}
+
+.bottom-div {
+    margin-bottom: 10px;
+}
+
+
+.account-table th
+ {
+    border: 1px solid #ccc;
+    padding: 8px;
+    text-align: left;
+    background-color: #ffcc80;
+}
+
+.footer-div {
+    border-top: 1px solid #ccc;
+    padding-top: 10px;
+}
+
+.footer-stats {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+}
+
+.footer-button {
+    padding: 10px 15px;
+}
+.action-button {
+    padding: 1px 2px;
+    background-color: rgb(135, 219, 57);
+}
+.image-box {
+    width: 100px; 
+    height: 100px; 
+    background-color: #ccc; 
+    margin-right: 1%; 
+    border: 2px solid #1fc510; 
+    border-radius: 10%;
+    overflow: hidden;
+    display: inline-block; /* Keeps it inline with the input */
+}
+/* Form section with some padding */
+.form-section {
+    background-color: white;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    margin-left: 20px;
+    width: 400px;
+  }
+  .account-table {
+    width: auto; 
+    border-collapse: collapse; /* Collapse borders */
+    margin: 20px auto; /* Center the table and add top/bottom spacing */
+    /* Optionally set max-width for responsive design */
+    max-width: 100%; 
+    background-color: 'white';
+}
+
+
+.account-table th {
+    background-color: #ffcc80; /* Header background color */
+}
+
+
+  
+  .modal-content {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    width: 80%;
+    height: 80%;
+    background-color: white;
+    padding: 20px;
+    overflow: auto; /* Allow vertical scrolling if content overflows */
+    border-radius: 8%; /* Optional: rounded corners */
+  }
+  
+  .table-history {
+    width: 100%; 
+    border-collapse: collapse; 
+    background-color: #f9f9f9; 
+  }
+  
+  .table-history th, .table-history td {
+    border: 1px solid #ddd; /* Add borders */
+    padding: 8px; /* Cell padding */
+    text-align: left; /* Align text to the left */
+  }
+  
+  .table-history th {
+    background-color: #ffcc80; /* Header background color */
+  }
+  /*for dropdown search by name*/
+  .dropdown-menu {
+    background-color: #dcdcdc; /* Light gray background */
+    border: 1px solid #aaa;    /* Subtle border */
+    border-radius: 5px;        /* Rounded corners */
+    max-height: 200px;         /* Limit height */
+    overflow-y: auto;          /* Scroll if needed */
+    position: absolute;         /* Positioning for dropdown */
+    z-index: 1000;             /* Ensure it appears above other elements */
+    padding: 5px 0;            /* Padding for aesthetics */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2); /* Subtle shadow */
+    white-space: nowrap;       /* Prevent text wrapping */
+    width: auto;               /* Width adjusts to content */
+}
+
+.dropdown-menu li {
+    padding: 10px 15px;        /* Padding inside each item */
+    cursor: pointer;           /* Pointer cursor for interactivity */
+}
+
+.dropdown-menu li:hover {
+    background-color: #b0b0b0; /* Darker gray on hover */
+    color: white;              /* Change text color on hover */
+}
+
+.dropdown-menu li:focus {
+    outline: none;             /* Remove default outline */
+}
