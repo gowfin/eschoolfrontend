@@ -43,8 +43,9 @@ const handleRowClick = (id) => {
             // Combine products and data when they are both available
     const combinedloan = data.map(loan=> {
         const matchingProduct = products.find(product =>
+            loan.LoanProduct && product.id && 
             loan.LoanProduct.trim() === product.id.trim(),
-          
+           
         );
   
         return {
@@ -71,8 +72,8 @@ const handleRowClick = (id) => {
     
      setDeposits(combineddeposit);
             // setLoans(combined.filter(item => item.code !== null));
-            console.log(loans);
-            console.log(deposits);
+            console.log('loan:',loans);
+            console.log('deposit',deposits);
             localStorage.setItem('groupCode', code);
         } catch (error) {
             console.error('Error fetching loans:', error);
@@ -222,12 +223,19 @@ const handleDepositAmountChange = (AccountID, value) => {
                             {loans.map((loan, index) => {
                                 // Check the previous loan's LoanID
                             const prevLoanID = index > 0 ? loans[index - 1].loanID : null;
-                            const displayLoanID = loan.loanID === prevLoanID ? loan.loanID : '';
-                            const displayOutstandingBal = loan.loanID === prevLoanID ? loan.OutstandingBal : '';
-                            const displayLoanProduct = loan.loanID === prevLoanID ? loan.LoanProduct : '';
-                            const displayinstalment = loan.loanID === prevLoanID ? loan.instalment : ''; 
-                            const displayamount = loan.loanID === prevLoanID ? false : true; 
-                                return(
+                            const displayLoanID = loan.loanID === prevLoanID ? '' :  loan.loanID;
+                            const displayOutstandingBal = loan.loanID === prevLoanID ? '':loan.OutstandingBal ;
+                            const displayLoanProduct = loan.loanID === prevLoanID ?  '':loan.LoanProduct ;
+                            const displayinstalment = loan.loanID === prevLoanID ? '':loan.instalment ; 
+                            const displayamount = loan.loanID === prevLoanID ? true : false; 
+                            // const prevLoanID = index > 0 ? loans[index - 1].loanID : null;
+                            // const displayLoanID =  loan.loanID ;
+                            // const displayOutstandingBal = loan.OutstandingBal ;
+                            // const displayLoanProduct = loan.loanID ;
+                            // const displayinstalment = loan.loanID ; 
+                            // const displayamount =  false; 
+                            
+                                 return(
                                 <tr key={index} onClick={() => handleRowClick(index)}
                                 onFocus={() => handleRowClick(index)}
                                 style={{

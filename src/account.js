@@ -4,11 +4,12 @@ import axios from 'axios';
 import loadingGif from './loading.gif'; // Your loading gif file
 import { useLocation } from 'react-router-dom';
 import  './menu.css';
+import TransactionModal  from './transactionmodal';
 // import { localhost } from './env.js';
 
 
 const AccountPage = ({ state, setState }) => {
-  const {localhost}= state || 'localhost:3000';
+  const {localhost}= state;
   const [searching, setSearching] = useState(false);
   const [searchingName, setSearchingName] = useState(false);
   const [pixPreview, setPixPreview] = useState(null);
@@ -23,7 +24,7 @@ const AccountPage = ({ state, setState }) => {
   const [message, setMessage] = useState("");
   const [isHistoryOpen,setIsHistoryOpen]=useState('');
   const [isDetailOpen,setIsDetailOpen]=useState(false)
-  const {branch,userid}=state|| {};
+  const {branch,products,userid}=state|| {};
   const [dep, setDep] = useState(true);
   const [balance, setBalance] = useState([]);
   const [menuPosition, setMenuPosition] = useState(null);
@@ -34,6 +35,12 @@ const AccountPage = ({ state, setState }) => {
   const [results, setResults] = useState([]);
   const [selectedAccount, setSelectedAccount] = useState(null);
   const location = useLocation();
+  const [isTrxModalOpen,setIsTrxModalOpen]=useState(false);
+  const [transactionType,setTransactionType]=useState('');
+  const [trxProductType,setTrxProductType]=useState('');
+  const [trxAccountID,setTrxAccountID]=useState('');
+  const [trxRunningBal,setTrxRunningBal]=useState('');
+  const [trxAccName,setTrxAccName]=useState('');
 ///search for custno from client creation
 useEffect(() => {
   // Function to parse query parameters
@@ -64,6 +71,8 @@ useEffect(() => {
 
   const handleSelect = (account) => {
       setSelectedAccount(account);
+      //  alert(account.CustNo);
+       setClientData({...clientData,custno:account.CustNo});
       // alert(selectedAccount.CustNo);
       setResults([]); // Clear results after selection
       
@@ -99,6 +108,8 @@ const getIDFormat=( num )=>{
 
     if(clientData.custno.length<10){
       setClientData({...clientData,custno:Branchcode+getIDFormat(clientData.custno)});
+    }else{
+      setClientData({...clientData,custno:e.target.value});
     }
   }
   const handleSearch = async (e) => {
@@ -115,7 +126,11 @@ const getIDFormat=( num )=>{
   
     try {
       const { custno } = clientData;
-      
+       // Double-check custno is complete before making the request
+    if (!custno) {
+      throw new Error('Customer number is required');
+    }
+
       const response = await axios.post(`${localhost}/get_accounts`, { custno });
 
       const data = response.data; // Extract data from response
@@ -203,7 +218,7 @@ const handleVerifyBal = async (custno, LoanID, AccountID,loanbal, savBal, balanc
   if (balance !== balToAdjustTo) {
     setAdjusting(true);
     try {
-      const baldiff=positivebal-balToAdjustTo;
+      const baldiff= LoanID ? positivebal-balToAdjustTo : Math.abs(positivebal-balToAdjustTo);
       // alert(baldiff);
       // console.log(custno, LoanID, AccountID,loanbal, savBal, balance, accname, userid);
       const response = await axios.post(`${localhost}/insert_balancediff`, { custno,LoanID,AccountID,balToAdjustTo,balance,baldiff,accname,userid });
@@ -253,21 +268,49 @@ setSignPreview (signSource);
       setSearching(false);
     }
   };
-  const handleDoubleClick = (e, item,itemtype) => {
+  const handleDoubleClick = (e, item,itemtype,bal,AccName) => {
     e.preventDefault();
     setMenuPosition({ x: e.clientX, y: e.clientY });
     setShowMenu(true);
+    setTrxProductType(itemtype);
+    setTrxAccountID(item);
+    setTrxRunningBal(bal);
+    setTrxAccName(AccName);
     item.slice()==='3' ||itemtype.includes('LN') ? setDep(false):setDep(true);
   };
 
+  const handleCloseDepMenu = () => {
+    setShowMenu(false);
+    setIsTrxModalOpen(true);
+    setTransactionType('Deposit')
+  };
+  const handleCloseRepMenu = () => {
+    setShowMenu(false);
+    setIsTrxModalOpen(true);
+    setTransactionType('Repayment')
+  
+  };
+  const handleCloseWdrMenu = () => {
+    setShowMenu(false);
+    setIsTrxModalOpen(true);
+    setTransactionType('Withdrawal')
+  
+  };
   const handleCloseMenu = () => {
     setShowMenu(false);
   };
+  const handletrxModalClose=()=>{
+    setIsTrxModalOpen(false);
+  }
     return (
     <div className="account-page">
+   <div>{isTrxModalOpen &&<TransactionModal userid={userid} products={products} isOpen={true} onClose={handletrxModalClose} isDeposit={transactionType==='Deposit' ? true:false} isWithdr={transactionType==='Withdrawal' ? true:false} isRepay={transactionType==='Repayment' ? true:false} transactionType={transactionType} AccountID={trxAccountID} ProductID={trxProductType} RunningBal={trxRunningBal} AccountName={trxAccName} CustNo={clientData.custno}
+   localhost={localhost}
    
+   />}</div>
 
       <form>
+        
       <div className="search-div">
         
         <input
@@ -287,7 +330,7 @@ setSignPreview (signSource);
           <div className="top-div">
           <ul  className="dropdown-menu" onBlur={''}>
                 {results.map((customer,index) => (
-                    <li key={index} onClick={() => handleSelect(customer)}>
+                    <li key={index} onClick={() => handleSelect(customer,index)}>
                         {customer.CustNo+'-'+customer.accountName}
                     </li>
                 ))}
@@ -335,7 +378,7 @@ setSignPreview (signSource);
       const balance = account.runningbal;
       const isNegative = balance < 0;
       return (
-        <tr key={index} onDoubleClick={(e) => handleDoubleClick(e, account.accountid,account.productid)} onContextMenu={(e) => handleDoubleClick(e, account.accountid,account.productid)}>
+        <tr key={index} onDoubleClick={(e) => handleDoubleClick(e, account.accountid,account.productid,account.runningbal,account.accountname)} onContextMenu={(e) => handleDoubleClick(e, account.accountid,account.productid,account.runningbal,account.accountname)}>
           <td>{account.accountid}</td>
           <td>{account.accountname}</td>
           <td style={{ fontWeight: 'bold', color: isNegative ? 'red' : 'green' }}>
@@ -357,10 +400,10 @@ setSignPreview (signSource);
         </table>
         {showMenu && (
   <div className="menu" style={{ top: menuPosition.y, left: menuPosition.x }} onMouseLeave={handleCloseMenu}>
-    {dep && <p onClick={handleCloseMenu}>Deposit</p>}
-    {dep && <p onClick={handleCloseMenu}>Withdrawal</p>}
+    {dep && <p onClick={handleCloseDepMenu}>Deposit</p>}
+    {dep && <p onClick={handleCloseWdrMenu}>Withdrawal</p>}
     {dep && <p onClick={handleCloseMenu}>Transfer</p>}
-    {!dep && <p onClick={handleCloseMenu}>Repayment</p>}
+    {!dep && <p onClick={handleCloseRepMenu}>Repayment</p>}
     {!dep && <p onClick={handleCloseMenu}>View Loan Schedule</p>}
     {!dep && <p onClick={handleCloseMenu}>See Guarantor</p>}
     <button onClick={handleCloseMenu}>Close</button>
@@ -450,11 +493,11 @@ setSignPreview (signSource);
                       </tr>
                       <tr>
                         <td>Cleared Bal:</td>
-                        <td>{`₦${balance.toLocaleString()}`}</td>
+                        <td>{balance &&`₦${balance.toLocaleString()}`}</td>
                       </tr>
                       <tr>
                         <td>Uncleared Bal:</td>
-                        <td>{item.RunningBal?`₦${item.RunningBal.toLocaleString()}`:`₦${item.OutstandingBal.toLocaleString()}`}</td>
+                        <td>{item.RunningBal?item.RunningBal && `₦${item.RunningBal.toLocaleString()}`:item.OutstandingBal &&`₦${item.OutstandingBal.toLocaleString()}`}</td>
                       </tr>
                       <tr>
                         <td>Account Status:</td>

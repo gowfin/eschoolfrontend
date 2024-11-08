@@ -7,10 +7,17 @@ import { Link } from 'react-router-dom';
 
 const IndWorkflow = ({ state }) => {
   const { branch } = state || {};
-  const {localhost}= state || 'localhost:3000';
+  const {localhost}= state ;
   const [loading, setLoading] = useState(false);
   const [branchCode, setBranchCode] = useState('');
-  const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
+  // const [date, setDate] = useState(new Date().toISOString().slice(0, 10));
+  const [date, setDate] = useState(() => {
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, '0'); // Month is zero-based, so we add 1
+    const day = String(today.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+});
   const [workflowDataInd, setWorkflowDataInd] = useState([]);
   const [arrayApproving, setArrayApproving] = useState([]);
   const [arrayRejecting, setArrayRejecting] = useState([]); // Initialize similarly
@@ -34,6 +41,11 @@ const IndWorkflow = ({ state }) => {
     IntElement: "",
     PrinElement: ""
   });
+// List of available branch codes
+const branchCodes = ["002", "003","004","005","006","007","008", "all"]; 
+const handleBranchCodeChange = (event) => {
+  setBranchCode(event.target.value);
+};
 
   const handleApprove = async (data, index) => {
     setArrayApproving((prevArrayLoading) => {
@@ -87,12 +99,13 @@ const IndWorkflow = ({ state }) => {
     }
   };
 
-  useEffect(() => {
-    fetchWorkflowData();
-  }, [date, branchCode]);
+  // useEffect(() => {
+  //   fetchWorkflowData();
+  // }, [date, branchCode]);
 
   return (
     <div className="modal" style={{ width: '100%' }}>
+      
       {loading && (
         <div>
           Loading...
@@ -101,19 +114,47 @@ const IndWorkflow = ({ state }) => {
       )}
       {error && <p style={{ color: 'red' }}>{error}</p>}
       <div className="modal-content">
-        <h2>
-          Set Date:
-          <input
-            type="date"
-            value={date}
-            style={{ maxWidth: '10%' }}
-            onChange={(e) => setDate(e.target.value)}
-          />
-        </h2>
-        <Link to="/" style={{ textDecoration: 'none' }}>
+      <h2 style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+  <label>
+    Select Branch Code:
+    <select value={branchCode} onChange={handleBranchCodeChange}>
+      {branchCodes.map((code) => (
+        <option key={code} value={code}>
+          {code === "all" ? "All Branches" : `Branch ${code}`}
+        </option>
+      ))}
+    </select>
+  </label>
+
+  <label style={{ marginLeft: '10px' }}>
+    Set Date:
+    <input
+      type="date"
+      value={date}
+      style={{ maxWidth: '150px', marginLeft: '5px' }}
+      onChange={(e) => setDate(e.target.value)}
+    />
+  </label>
+
+  <button onClick={()=>{ fetchWorkflowData();}}
+    style={{
+      width: '10%',
+      padding: '5px',
+      marginLeft: '10px',
+      cursor: 'pointer',
+      backgroundColor: '#666666', // Fixed color code
+      color: 'white',
+      border: 'none',
+      borderRadius: '10px',
+      transition: 'background-color 0.3s ease',
+    }}
+  >
+    Search
+  </button>
+  <Link to="/" style={{ textDecoration: 'none' }}>
           <button
             style={{
-              width: '10%',
+              width: '100%',
               padding: '5px',
               margin: '10px',
               cursor: 'pointer',
@@ -127,6 +168,9 @@ const IndWorkflow = ({ state }) => {
             Close
           </button>
         </Link>
+</h2>
+        
+        
         <table>
           <thead>
             <tr>

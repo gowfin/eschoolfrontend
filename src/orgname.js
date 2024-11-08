@@ -1,7 +1,11 @@
             export const getOrgName = (companyName) => {
-               if (companyName.toUpperCase() === 'BLESSED') {
+                if (!companyName) {return 'Macmay Group';}
+                else if (companyName.toUpperCase() === 'BLESSED') {
                    return 'Blessed Women Microfinance';
                }
+               else if (companyName.toUpperCase() === 'MACMAY') {
+                return 'Macmay Group';
+            }
                else if (companyName.toUpperCase() === '2HAPI') {
                     return 'Helping hands for Active People Initiative';
                 }
@@ -20,6 +24,12 @@
                 else if (companyName.toUpperCase() === 'IVYESSENTIAL'  ) {
                     return 'IVY ESSENTIAL LIMITED';
                 }
+                else if (companyName.toUpperCase() === 'PRESTIGE'  ) {
+                    return 'PRESTIGE SUPPORT SERVICES';
+                }
+                else if (companyName.toUpperCase() === 'DEMAYOR'  ) {
+                    return 'DE MAYOR CORPORATE SERVICES LTD';
+                }
                 else if (companyName.toUpperCase() === '/'  ) {
                     return 'Macmay Group';
                 }
@@ -32,7 +42,7 @@
                     
                 }
                 else {
-                   return 'Macmay Group';
+                   return companyName;
                   
                }
            };

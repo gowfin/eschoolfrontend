@@ -29,7 +29,7 @@ const NavBar = ({ setLoggedIn,state }) => {
     const { branch, logindata, groups, biztype,userid,userrole,status } = state || {};
     const [isDropdownOpen, setDropdownOpen] = useState(false);
     const [isReportdownOpen, setIsReportdownOpen] = useState(false);
-// State to manage the visibility of the div
+    const {localhost,companyname}= state || 'localhost:3005'
 const [isDivVisible, setIsDivVisible] = useState(true);
 //HIDE SESSION MGT AND WORKFLOW FOR NON-APPROVING OFFICERS
  const displayadminroles=userrole==='Administrator'||userrole==='Manager';
@@ -50,7 +50,7 @@ const toggleVisibility = () => {
         setLoggedIn(false);
         localStorage.removeItem('appState'); // Clear saved app state
         localStorage.setItem('loggedIn', 'false'); // Update login state
-        navigate('/'); // Redirect to the login page
+        navigate(`/?p=${companyname}`); // Redirect to the login page
     };
 
     return (
@@ -83,9 +83,7 @@ const toggleVisibility = () => {
                     <ul style={{ display: isReportdownOpen ? 'block' : 'none', paddingLeft: '20px' }}>
                         <li style={navItemStyle}><Link to="/report"><FaCogs/>Staff Perfirmance Report</Link></li>
                         <li style={navItemStyle}><Link to="/report2"><FaHistory/>Transaction report</Link></li>
-                        <li style={navItemStyle}><Link to="/fieldprintreport"><FaCogs/>FieldPrint</Link></li>
-                        <li style={navItemStyle}><Link to="/fieldprintreport"><FaMoneyBillWave/>FieldPrint</Link></li>
-                    </ul>
+                        <li style={navItemStyle}><Link to="/fieldprintreport"><FaCogs/>FieldPrint</Link></li>                    </ul>
                     <li style={navItemStyle}><FaUser /> <Link to="/account">Account</Link></li>
                     <li style={navItemStyle}><FaClipboardList /> <Link to="/bulk">Bulk Posting</Link></li>
                     <li style={navItemStyle}><FaClipboardList /> <Link to="/group">Group Posting</Link></li>
@@ -117,8 +115,8 @@ const toggleVisibility = () => {
 
             {isDivVisible && (
                 <div style={{ flex: 1, padding: '20px' }}>
-                    <ChartComponent branch={branch.slice(0, 3)} /> 
-                    <PieChartComponent branch={branch.slice(0, 3)} />
+                    <ChartComponent branch={branch.slice(0, 3)} localhost={localhost} /> 
+                    <PieChartComponent branch={branch.slice(0, 3)} localhost={localhost} />
                 </div>
             )}
         </div>

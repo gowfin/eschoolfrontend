@@ -3,7 +3,7 @@ import { getOrgName  } from './orgname.js';
 
 const Dashboard = ({ state, setState }) => {
  
-    const { branch, logindata, groups, biztype,userid,userrole,status } = state || {};
+    const { branch, logindata, groups, biztype,userid,userrole,status,localhost,companyname } = state || {};
     return (
       
       <div>
@@ -19,7 +19,7 @@ const Dashboard = ({ state, setState }) => {
         margin: '1px 0',
     }}
   >
-    <h2>{getOrgName(state.localhost)}</h2>
+    <h2>{getOrgName(companyname)}</h2>
     
   </div>
   <h3 style={{color:'gold'}}>Welcome back {userid} . You logged in as {userrole}.</h3>

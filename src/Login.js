@@ -21,23 +21,26 @@ const Login = ({ setLoggedIn, state, setState, isModalOpen, setIsModalOpen, bran
   const [companyname, setCompanyname] = useState('');
   const [localhost,setLocalhost]=useState('');
 
-  useEffect(() => {
-    // Extract the first part of the hostname from the current URL
-    const hostname = window.location.hostname;
-    // const firstComponent = hostname.split('.')[0]; // Splits at the dot and takes the first part
-    // setFirstPart(firstComponent);
-    const pathParts = window.location.pathname.split('/');
-      setCompanyname(pathParts[pathParts.length - 1]);
+  
+    useEffect(() => {
+      const params = new URLSearchParams(window.location.search);
+      const compname = params.get("p");
+      setCompanyname(compname);
+  
       const firstPart = window.location.origin;
-       setLocalhost(getLocalhost(companyname));
-       console.log('Localhost URL:', localhost); 
-    // Now, redirect to the first part (base URL)
-    if (companyname) {
-      //set the backend using the company name
-    
-      window.location.href = firstPart;  // Redirects to gowfin.ohafiamicrofinancebankplc.com
-    }
-  }, []); // Empty dependency array to run only on component mount
+      if (compname) {
+        setLocalhost(getLocalhost(compname));
+        console.log('Localhost URL:', localhost);
+        console.log('Company Name:', compname);
+      }
+  
+      // Redirect to the main URL without parameters
+      if (companyname) {
+        localStorage.clear();
+        window.location.href = firstPart;
+      }
+    }, []); // Empty dependency array to run only on mount
+  
 /////////////////////////////////////
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
@@ -126,6 +129,7 @@ const Login = ({ setLoggedIn, state, setState, isModalOpen, setIsModalOpen, bran
         products:data,
         localhost:localhost,
         companyname:companyname
+        
       }));
     } catch (err) {
       console.log(err.message);

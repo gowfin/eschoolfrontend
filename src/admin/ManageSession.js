@@ -5,7 +5,7 @@ import loadingGif from '../loading.gif'; // Your loading gif file
 // import { localhost } from '../env.js';
 
 const SessionMgt = ({ state }) => {
-  const {localhost}= state || 'localhost:3000';
+  const {localhost}= state;
   const [sessionDate, setSessionDate] = useState('');
   const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(false);
@@ -13,7 +13,7 @@ const SessionMgt = ({ state }) => {
   // Initialize sessionDate with the current date in YYYY-MM-DD format
   useEffect(() => {
     const today = new Date();
-    const formattedDate = today.toISOString().split('T')[0]; // Format to YYYY-MM-DD
+    const formattedDate = today.toISOString().slice(0, 10); // Format to YYYY-MM-DD
     setSessionDate(formattedDate);
   }, []);
 

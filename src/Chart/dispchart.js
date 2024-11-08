@@ -9,11 +9,11 @@ const Dispalychart = ({state}) => {
     return (
         <div>
         <div>
-            <h1>Disbursement and Mobilization</h1>
+            {/* <h1>Disbursement and Mobilization</h1> */}
             <ChartComponent branch={branch.slice(0,3)} localhost={localhost} /> 
         </div>
         <div>
-        <h1>Income and Expense</h1>
+        {/* <h1>Income and Expense</h1> */}
         <ChartComponentPie branch={branch.slice(0,3)} localhost={localhost} /> 
     </div>
     </div>
