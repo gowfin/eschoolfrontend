@@ -5,6 +5,7 @@ import loadingGif from './loading.gif'; // Your loading gif file
 import { useLocation } from 'react-router-dom';
 import  './menu.css';
 import TransactionModal  from './transactionmodal';
+import DisbursementModal  from './disbursementModal';
 // import { localhost } from './env.js';
 
 
@@ -27,7 +28,7 @@ const AccountPage = ({ state, setState }) => {
   const {branch,products,userid}=state|| {};
   const [dep, setDep] = useState(true);
   const [balance, setBalance] = useState([]);
-  const [menuPosition, setMenuPosition] = useState(null);
+  const [menuPosition, setMenuPosition] = useState(2000,2000);
   const [showMenu, setShowMenu] = useState(false);
   const [adjusting,setAdjusting]=useState(false);
   const Branchcode=branch.slice(0,3);
@@ -36,11 +37,13 @@ const AccountPage = ({ state, setState }) => {
   const [selectedAccount, setSelectedAccount] = useState(null);
   const location = useLocation();
   const [isTrxModalOpen,setIsTrxModalOpen]=useState(false);
+  const [showDisbModal,setShowDisbModal]=useState(false);
   const [transactionType,setTransactionType]=useState('');
   const [trxProductType,setTrxProductType]=useState('');
   const [trxAccountID,setTrxAccountID]=useState('');
   const [trxRunningBal,setTrxRunningBal]=useState('');
   const [trxAccName,setTrxAccName]=useState('');
+  
 ///search for custno from client creation
 useEffect(() => {
   // Function to parse query parameters
@@ -154,7 +157,9 @@ const getIDFormat=( num )=>{
       setSearching(false);
     }
   };
-
+const handledisbModal=async ()=>{
+  setShowDisbModal(true);
+}
   const handleHistory = async (accountid) => {
     console.log(accountid);
     
@@ -270,7 +275,16 @@ setSignPreview (signSource);
   };
   const handleDoubleClick = (e, item,itemtype,bal,AccName) => {
     e.preventDefault();
-    setMenuPosition({ x: e.clientX, y: e.clientY });
+  
+      // Calculate the center position of the visible viewport
+  const accountPageRect = document.querySelector('.account-page').getBoundingClientRect();
+  const viewportCenterX =window.innerWidth / 2+e.pageX/6; //window.innerWidth / 2;
+  const viewportCenterY = window.innerHeight / 2+e.pageY/2;;
+  // alert(window.innerHeight)
+  // alert(e.pageY)
+
+  // Update the state to place the menu at the calculated center position
+  setMenuPosition({ x: viewportCenterX, y: viewportCenterY });
     setShowMenu(true);
     setTrxProductType(itemtype);
     setTrxAccountID(item);
@@ -287,6 +301,7 @@ setSignPreview (signSource);
   const handleCloseRepMenu = () => {
     setShowMenu(false);
     setIsTrxModalOpen(true);
+
     setTransactionType('Repayment')
   
   };
@@ -302,12 +317,17 @@ setSignPreview (signSource);
   const handletrxModalClose=()=>{
     setIsTrxModalOpen(false);
   }
+  const handleDisbModalClose=()=>{
+    setShowDisbModal(false);
+  }
     return (
     <div className="account-page">
    <div>{isTrxModalOpen &&<TransactionModal userid={userid} products={products} isOpen={true} onClose={handletrxModalClose} isDeposit={transactionType==='Deposit' ? true:false} isWithdr={transactionType==='Withdrawal' ? true:false} isRepay={transactionType==='Repayment' ? true:false} transactionType={transactionType} AccountID={trxAccountID} ProductID={trxProductType} RunningBal={trxRunningBal} AccountName={trxAccName} CustNo={clientData.custno}
-   localhost={localhost}
+   localhost={localhost}   
    
-   />}</div>
+   />} <button className="search-btn" onClick={handledisbModal}>Disbursement</button></div>
+     <div>{showDisbModal &&<DisbursementModal userid={userid} products={products} isOpen={true} onClose={handleDisbModalClose}  AccountID={trxAccountID}  AccountName={trxAccName} CustNo={clientData.custno}  localhost={localhost}  />}</div>
+ 
 
       <form>
         

@@ -1,0 +1,17 @@
+.modal-content {
+    font-family: "Arial", sans-serif; /* Professional, modern look */
+    font-size: 16px;                  /* Base font size, readable but not too large */
+    color: #333333;                   /* Dark gray text color for professionalism */
+    line-height: 1.5;                 /* Improves readability */
+}
+
+h3 {
+    font-size: 20px;                  /* Slightly larger for headers */
+    font-weight: bold;                /* Makes headings stand out */
+    margin-bottom: 10px;
+}
+
+label {
+    font-size: 14px;                  /* Smaller for labels, subtly styled */
+    font-weight: bold;
+}

@@ -14,6 +14,7 @@ import ManageSession from './admin/ManageSession'
 import Single from './workflow/single'
 import Bulk from './bulk'
 import Group from './group'
+import DisbursementDetail from './disbursement_rpt'
 const App = () => {
   const [state, setState] = useState(() => {
     const savedState = localStorage.getItem('appState');
@@ -69,6 +70,7 @@ const App = () => {
                 <Route path="/" element={<Dashboard state={state} setState={setState} />} />
                 <Route path="/report" element={<Report state={state} setState={setState} />} />
                 <Route path="/report2" element={<Report2 state={state} setState={setState} />} />
+                <Route path="/disbursement_rpt" element={< DisbursementDetail state={state} setState={setState} />} />
                 <Route path="/fieldprintreport" element={<FieldPrint state={state} setState={setState} />} />
                 <Route path="/account" element={<Account state={state} setState={setState} />} />
                 <Route path="/client" element={<Client state={state} setState={setState} />} />

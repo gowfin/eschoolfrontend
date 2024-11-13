@@ -83,6 +83,7 @@ const toggleVisibility = () => {
                     <ul style={{ display: isReportdownOpen ? 'block' : 'none', paddingLeft: '20px' }}>
                         <li style={navItemStyle}><Link to="/report"><FaCogs/>Staff Perfirmance Report</Link></li>
                         <li style={navItemStyle}><Link to="/report2"><FaHistory/>Transaction report</Link></li>
+                        <li style={navItemStyle}><Link to="/disbursement_rpt"><FaHistory/>Disbursement report</Link></li>
                         <li style={navItemStyle}><Link to="/fieldprintreport"><FaCogs/>FieldPrint</Link></li>                    </ul>
                     <li style={navItemStyle}><FaUser /> <Link to="/account">Account</Link></li>
                     <li style={navItemStyle}><FaClipboardList /> <Link to="/bulk">Bulk Posting</Link></li>

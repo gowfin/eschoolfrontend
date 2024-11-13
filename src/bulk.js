@@ -8,7 +8,7 @@ import './bulk.css';
 // import { localhost } from './env.js';
 
 const Bulk = ({state}) => {
-    const {localhost}= state || 'localhost:3000';
+    const {localhost}= state ;
     const [code, setCode] = useState('');
     const [loans, setLoans] = useState([]);
     const [deposits, setDeposits] = useState([]); // State for deposits

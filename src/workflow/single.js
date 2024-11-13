@@ -140,7 +140,7 @@ const handleBranchCodeChange = (event) => {
     style={{
       width: '10%',
       padding: '5px',
-      marginLeft: '10px',
+      marginLeft: '25px',
       cursor: 'pointer',
       backgroundColor: '#666666', // Fixed color code
       color: 'white',
