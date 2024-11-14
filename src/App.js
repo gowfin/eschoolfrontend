@@ -15,6 +15,7 @@ import Single from './workflow/single'
 import Bulk from './bulk'
 import Group from './group'
 import DisbursementDetail from './disbursement_rpt'
+
 const App = () => {
   const [state, setState] = useState(() => {
     const savedState = localStorage.getItem('appState');
@@ -76,7 +77,7 @@ const App = () => {
                 <Route path="/client" element={<Client state={state} setState={setState} />} />
                 <Route path="/dispchart" element={<Chart state={state} setState={setState} />} />
                 <Route path="/workflow/batch" element={<WorkflowBatch state={state} setState={setState} />} />
-                <Route path="/admin/managesession" element={<ManageSession/>} />
+                <Route path="/admin/managesession" element={<ManageSession  state={state} setState={setState}/>} />
                 <Route path="/bulk" element={<Bulk state={state}/>} />
                 <Route path="/group" element={<Group state={state}/>} />
                 <Route path="/workflow/single" element={<Single state={state} modalIsOpen={true} setModalIsOpen={setModalIsOpen}/>} />

@@ -35,8 +35,10 @@ const Dashboard = ({ state, setState }) => {
       alignItems: 'center',
       justifyContent: 'flex-start',
       marginTop: '-100px', // Move content up
+      zIndex: 1, // Set a low z-index for background
       color: 'green',
       clipPath: 'inset(30% 0 0 0)', // Crop the top 20%
+      position: 'relative',
         }}
       >
      

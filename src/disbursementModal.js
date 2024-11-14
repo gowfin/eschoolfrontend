@@ -2,11 +2,10 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import loadingGif from './loading.gif'; // Your loading gif file
 
-const DisbursementModal = ({ isOpen, onClose,CustNo,userid, products,AccountID ,localhost}) => {
+const DisbursementModal = ({ isOpen, onClose,CustNo,accountName,userid, products,AccountID ,localhost,GroupID}) => {
   const [clientId, setClientId] = useState(CustNo);
   const [amount, setAmount] = useState('');
   const [selectedProduct, setSelectedProduct] = useState('');
-  const [installmentCount, setInstallmentCount] = useState(1);
   const [schedule, setSchedule] = useState('');
   const [disbDate,setDisbDate]=useState();
   const [posting, setPosting] = useState(false);
@@ -18,6 +17,7 @@ const DisbursementModal = ({ isOpen, onClose,CustNo,userid, products,AccountID ,
   const [selectedInterestType,setSelectedInterestType]=useState('');
   const [isIndLN,setIsIndLN]=useState(false);
   const [checked, setChecked] = useState(false);
+  const [err,setErr]=useState('');
   const [adjustDefaultProductSettings,setAdjustDefaultProductSettings]=useState('Allow Default Product settings')
  
    //sort the product using id in alphabetical order
@@ -46,23 +46,16 @@ const DisbursementModal = ({ isOpen, onClose,CustNo,userid, products,AccountID ,
     console.log(`Searching for client ID: ${clientId}`);
     // Add your search logic here
   };
-  // Function to handle form submission
-  const handleSubmit = () => {
-    console.log({
-      clientId,
-      amount,
-      selectedProduct,
-      installmentCount,
-    });
-    // Add form submission logic here
-  };
+  
+ 
 
    // Format schedule data for tabular display
+   
    const formattedSchedule = schedule? schedule.map(item => 
-    `${item.installment.toString().padEnd(12)} ${item.date.toString().padEnd(12)} ${item.principalRepay.padEnd(12)} ${item.interest.padEnd(12)} ${item.balance.padEnd(12)} ${item.status.padEnd(12)} ${item.clientID.padEnd(12)}`
+    ` ${item.installment.toString().padEnd(4)}${item.repayWithInt.padEnd(12)} ${item.date.toString().padEnd(12)} ${item.principalRepay.padEnd(12)} ${item.interest.padEnd(12)} ${item.balance.padEnd(12)} ${item.status.padEnd(14)} ${item.clientID.padEnd(12)}`
   ):'';
 
-  const header = `Installment    Date    Principal    Interest     Balance     status     ClientID     \n`;
+  const header = `SN   Installment  Date         Principal    Interest     Balance      status         ClientID     \n`;
   const formattedText =schedule? header + formattedSchedule.join('\n'):'';
 
 
@@ -70,17 +63,20 @@ const DisbursementModal = ({ isOpen, onClose,CustNo,userid, products,AccountID ,
   const handleCalculateSchedule = async () => {
     try {
       // console.log( selectedProduct,amount,clientId);
+      setSchedule('');
       setSearching2(true);
       const response = await axios.post(`${localhost}/calculate-schedule`, {
         productID: selectedProduct,
         amount: parseFloat(amount.replace(/₦|,/g, '')),
         clientID: clientId,
         productSettings:adjustDefaultProductSettings,
-        instalCount:instalCount,
+        adjustedProdInstalCount:instalCount,
         monthCount:monthCount,
         adjInstalCount:adjInstalCount,
-        selectedInterestType:selectedInterestType,
-        includeSaturday:checked
+        selectedInterestType,
+        includeSaturday:checked,
+        disbursedDate:disbDate,
+        selectedProduct
       });
       // console.log(response.data);
       // console.log(response.data.schedule);
@@ -91,6 +87,45 @@ const DisbursementModal = ({ isOpen, onClose,CustNo,userid, products,AccountID ,
     } catch (error) {
       console.error("Error calculating schedule", error);
       setSearching2(false);
+    }
+  };
+  // Function to handle form submission
+  const handleSubmit = async () => {
+    setPosting(true);
+    const mandatoryDeposit = parseFloat(amount.replaceAll(',', '')) * parseFloat(0.1) / 100;
+
+    if (!clientId) {
+      console.error("Please verify the client by clicking the search button before submitting.");
+      return;
+    }
+
+    try {
+      const response = await axios.post(`${localhost}/disburseLoan`, {
+        clientId,
+        amount:parseFloat(amount.replace(/₦|,/g, '')),
+        selectedProduct,
+        accountName,
+        productSettings:adjustDefaultProductSettings==='Adjust Default Product settings'? `${instalCount},${monthCount}`:'none' ,
+        adjustedProdInstalCount:instalCount,
+        monthCount:monthCount,
+        adjInstalCount:adjInstalCount,
+        selectedInterestType:selectedInterestType==='Reducing'? '1.00':selectedInterestType==='EMI/EWI'?
+        "1.0":checked? "0.1":"1",
+        disbursedDate:disbDate,
+        GroupID
+      });
+
+      if (response.data.success) {
+        alert("Loan Disbursed but inactive, Boss");
+        setErr('Successful')
+      } else {
+        setErr(response.data.message);
+      }
+      setPosting(false);
+    } catch (error) {
+      console.error("Error disbursing loan:", error);
+      setPosting(false);
+       setErr("There was an error processing the loan.");
     }
   };
 
@@ -141,7 +176,7 @@ const DisbursementModal = ({ isOpen, onClose,CustNo,userid, products,AccountID ,
           <input
             type="text"
             value={instalCount}
-            onChange={(e) => setClientId(e.target.value)}
+            onChange={(e) => setInstalCount(e.target.value)}
             placeholder="Enter No of Instalments"
             style={{ flex: 1 }}
           />
@@ -150,7 +185,7 @@ const DisbursementModal = ({ isOpen, onClose,CustNo,userid, products,AccountID ,
           <input
             type="text"
             value={monthCount}
-            onChange={(e) => setClientId(e.target.value)}
+            onChange={(e) => setMonthCount(e.target.value)}
             placeholder="Enter No of Months"
             style={{ flex: 1 }}
           />
@@ -173,7 +208,7 @@ const DisbursementModal = ({ isOpen, onClose,CustNo,userid, products,AccountID ,
       >
         <h3>Disbursement Module</h3>
 
-        {/* Client ID */}
+        <span style={{color:err.includes('Successful')? 'green':'red'}}>{err}</span>
         <div>
           <label>Client ID</label>
           <input
@@ -263,7 +298,7 @@ const DisbursementModal = ({ isOpen, onClose,CustNo,userid, products,AccountID ,
         {/* Submit Button */}
         <div style={{ marginTop: '20px' }}>
           <button onClick={handleSubmit} style={{ width: '100%' }}>
-            Submit
+          {posting?<img src={loadingGif} alt="Loading..." style={{ width: '7%', height: '7%' }} />:'Submit'}
           </button>
         </div>
 

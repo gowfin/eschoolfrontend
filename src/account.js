@@ -326,7 +326,7 @@ setSignPreview (signSource);
    localhost={localhost}   
    
    />} <button className="search-btn" onClick={handledisbModal}>Disbursement</button></div>
-     <div>{showDisbModal &&<DisbursementModal userid={userid} products={products} isOpen={true} onClose={handleDisbModalClose}  AccountID={trxAccountID}  AccountName={trxAccName} CustNo={clientData.custno}  localhost={localhost}  />}</div>
+     <div>{showDisbModal &&<DisbursementModal userid={userid} products={products} isOpen={true} onClose={handleDisbModalClose}  AccountID={trxAccountID}  AccountName={trxAccName} CustNo={clientData.custno}  accountName={clientData.accountname} localhost={localhost} GroupID={clientData.groupid} />}</div>
  
 
       <form>

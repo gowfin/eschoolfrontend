@@ -1,5 +1,9 @@
 import {React,useState} from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import ExpenseModal from './ExpenseModal';
+import IncomeModal from './incomeModal';
+
 import { 
     FaChartBar, 
     FaRegChartBar, 
@@ -30,10 +34,16 @@ const NavBar = ({ setLoggedIn,state }) => {
     const [isDropdownOpen, setDropdownOpen] = useState(false);
     const [isReportdownOpen, setIsReportdownOpen] = useState(false);
     const {localhost,companyname}= state || 'localhost:3005'
-const [isDivVisible, setIsDivVisible] = useState(true);
+    const [isDivVisible, setIsDivVisible] = useState(true);
+    const [isFABOpen, setIsFABOpen] = useState(false);
+    const [isExOpen,setIsExOpen]=useState(false);
+    const [isIncOpen,setIsIncOpen]=useState(false);
+    const [incomeList,setIncomeList]=useState([]);
+    const [expenseList,setExpenseList]=useState([]);
 //HIDE SESSION MGT AND WORKFLOW FOR NON-APPROVING OFFICERS
- const displayadminroles=userrole==='Administrator'||userrole==='Manager';
+    const displayadminroles=userrole==='Administrator'||userrole==='Manager';
 // const displayadminroles=false;
+
 
 // Function to toggle the visibility
 const toggleVisibility = () => {
@@ -47,12 +57,39 @@ const toggleVisibility = () => {
     setIsReportdownOpen(!isReportdownOpen);
   };
     const handleLogout = () => {
+
         setLoggedIn(false);
         localStorage.removeItem('appState'); // Clear saved app state
         localStorage.setItem('loggedIn', 'false'); // Update login state
         navigate(`/?p=${companyname}`); // Redirect to the login page
     };
-
+    const handleIncome = async() => {
+      setIsIncOpen(true);
+      setIsExOpen(false);//hide expense
+      alert(branch);
+      if(incomeList.length===0){
+        const response = await axios.post(`${localhost}/getglincome`,{branch})
+        setIncomeList(response.data);
+        console.log(response.data);
+      }
+      
+  };
+  const handleExpense = async() => {
+    setIsExOpen(true);//hide income
+    setIsIncOpen(false);
+     if(expenseList.length===0){
+      const response = await axios.post(`${localhost}/getglexpense`,{branch})
+      setExpenseList(response.data);
+      // console.log(response.data);
+     }
+    
+};
+const handleExModalClose = () => {
+  setIsExOpen(false); // Close modal
+};
+const handleIncModalClose = () => {
+  setIsIncOpen(false); // Close modal
+};
     return (
 <div style={{ display: 'flex', backgroundColor: 'lemonchiffon', height: '100vh' }}>
             <div style={{
@@ -75,7 +112,48 @@ const toggleVisibility = () => {
                 onClick={toggleVisibility}>
                     {isDivVisible ? 'Hide chart' : 'Show chart'} 
                 </button>
+      {expenseList.length!==0 &&isExOpen &&<ExpenseModal
+        isOpen={isExOpen}
+        onClose={handleExModalClose}
+        expenseList={expenseList}
+        onSelectExpense={expenseList}
+      />}
+      {incomeList.length!==0 && isIncOpen && <IncomeModal
+        isOpen={isIncOpen}
+        onClose={handleIncModalClose}
+        incomeList={incomeList}
+        onSelectIncome={incomeList}
+      />}
+              
+                 <div style={{ position: 'fixed', bottom: '20px', right: '30%',  width: '80px', 
+                     height: '80px',
+                     backgroundColor: '#DAA520',
+                     borderRadius: '50%', // Makes it fully rounded
+                     cursor: 'pointer', }}> 
+                     <button style={{backgroundColor: '#DAA520',borderRadius:'50%'}} onClick={() =>{setIsFABOpen(!isFABOpen);setIsExOpen(!isExOpen);setIsIncOpen(!isIncOpen)}}>
+                     <i className="fas fa-plus"></i> GL Posting
+                </button>
+             
                 
+                {isFABOpen && (
+                <div style={{ 
+                  position: 'absolute', 
+                  bottom: '50px', 
+                  left: '50%', 
+                  transform: 'translateX(-100%)', 
+                  display: 'flex', 
+                  flexDirection: 'row', 
+                  alignItems: 'center', 
+                  zIndex: 1000 
+                }}
+              >                <button hidden={isIncOpen} style={{borderRadius:'50%'}}onClick={handleIncome}>Income</button>
+                <button style={{borderRadius:'50%',backgroundColor:'#FF6666'}} onClick={handleExpense}>Expense</button>
+                <button style={{borderRadius:'50%'}}onClick={() => alert('In Progress...')}>Bank</button>
+                <button style={{borderRadius:'50%'}}onClick={() => alert('In Progress...')}>Asset</button>
+                
+                </div>
+                   )}
+                </div>            
                 <h3>Navigation</h3>
                 <ul style={{ listStyleType: 'none', padding: 0 }}>
                     <li style={navItemStyle}><FaChartBar /> <Link to="/">Dashboard</Link></li>
@@ -102,7 +180,7 @@ const toggleVisibility = () => {
                 </ul>
                 <button onClick={handleLogout} style={{
                     marginTop: '20px',
-                    backgroundColor: 'red',
+                    backgroundColor: '#FF6666',
                     color: 'white',
                     border: 'none',
                     padding: '10px',
@@ -116,8 +194,8 @@ const toggleVisibility = () => {
 
             {isDivVisible && (
                 <div style={{ flex: 1, padding: '20px' }}>
-                    <ChartComponent branch={branch.slice(0, 3)} localhost={localhost} /> 
-                    <PieChartComponent branch={branch.slice(0, 3)} localhost={localhost} />
+                    <ChartComponent branch={branch&&branch.slice(0, 3)} localhost={localhost} /> 
+                    <PieChartComponent branch={branch&&branch.slice(0, 3)} localhost={localhost} />
                 </div>
             )}
         </div>
