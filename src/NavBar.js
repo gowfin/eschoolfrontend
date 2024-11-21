@@ -3,7 +3,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import ExpenseModal from './ExpenseModal';
 import IncomeModal from './incomeModal';
-
+import BankModal from './bankModal';
+import AssetModal from './assetModal';
 import { 
     FaChartBar, 
     FaRegChartBar, 
@@ -38,13 +39,46 @@ const NavBar = ({ setLoggedIn,state }) => {
     const [isFABOpen, setIsFABOpen] = useState(false);
     const [isExOpen,setIsExOpen]=useState(false);
     const [isIncOpen,setIsIncOpen]=useState(false);
+    const [isBnkOpen,setIsBnkOpen]=useState(false);
+    const [isAstOpen,setIsAstOpen]=useState(false);
     const [incomeList,setIncomeList]=useState([]);
     const [expenseList,setExpenseList]=useState([]);
+    const [bankList,setBankList]=useState([]);
+    const [assetList,setAssetList]=useState([]);
 //HIDE SESSION MGT AND WORKFLOW FOR NON-APPROVING OFFICERS
     const displayadminroles=userrole==='Administrator'||userrole==='Manager';
 // const displayadminroles=false;
+/////////////////DRAGGING FOR HANGING BUTTON/////////////
+const [position, setPosition] = useState({ x: 170, y: 90 }); // Initial position
+const [dragging, setDragging] = useState(false);
+const [startDrag, setStartDrag] = useState({ x: 0, y: 0 });
+const handleDragStart = (e) => {
+    setDragging(true);
+    // Determine whether the event is touch or mouse
+    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+    const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+    setStartDrag({
+      x: clientX - position.x,
+      y: clientY - position.y,
+    });
+  };
 
+  const handleDrag = (e) => {
+    if (!dragging) return;
+    // Determine whether the event is touch or mouse
+    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+    const clientY = e.touches ? e.touches[0].clientY : e.clientY;
 
+    setPosition({
+      x: clientX - startDrag.x,
+      y: clientY - startDrag.y,
+    });
+  };
+
+  const handleDragEnd = () => {
+    setDragging(false);
+  };
+//////////////////////END OF DRAGGING CONST AND NETHOD
 // Function to toggle the visibility
 const toggleVisibility = () => {
     setIsDivVisible(!isDivVisible);
@@ -64,32 +98,60 @@ const toggleVisibility = () => {
         navigate(`/?p=${companyname}`); // Redirect to the login page
     };
     const handleIncome = async() => {
+      handleExModalClose();
       setIsIncOpen(true);
-      setIsExOpen(false);//hide expense
-      alert(branch);
+     
+      // alert(branch);
       if(incomeList.length===0){
         const response = await axios.post(`${localhost}/getglincome`,{branch})
         setIncomeList(response.data);
-        console.log(response.data);
+      
       }
       
   };
   const handleExpense = async() => {
+    handleExModalClose();
     setIsExOpen(true);//hide income
-    setIsIncOpen(false);
+   
      if(expenseList.length===0){
       const response = await axios.post(`${localhost}/getglexpense`,{branch})
       setExpenseList(response.data);
-      // console.log(response.data);
+    
      }
     
 };
+const handleBank = async() => {
+  handleExModalClose();
+  setIsBnkOpen(true);
+ 
+ 
+  if(bankList.length===0){
+    const response = await axios.post(`${localhost}/getglbank`,{branch})
+    setBankList(response.data);
+   
+  }
+  
+};
+const handleAsset = async() => {
+  handleExModalClose();
+  setIsAstOpen(true);
+
+  
+  if(assetList.length===0){
+    const response = await axios.post(`${localhost}/getglasset`,{branch})
+    setAssetList(response.data);
+    
+  }
+  
+};
 const handleExModalClose = () => {
-  setIsExOpen(false); // Close modal
+ 
+  setIsExOpen(false); 
+  setIsIncOpen(false);
+  setIsBnkOpen(false); 
+  setIsAstOpen(false); 
 };
-const handleIncModalClose = () => {
-  setIsIncOpen(false); // Close modal
-};
+
     return (
 <div style={{ display: 'flex', backgroundColor: 'lemonchiffon', height: '100vh' }}>
             <div style={{
@@ -112,25 +174,71 @@ const handleIncModalClose = () => {
                 onClick={toggleVisibility}>
                     {isDivVisible ? 'Hide chart' : 'Show chart'} 
                 </button>
-      {expenseList.length!==0 &&isExOpen &&<ExpenseModal
+      {expenseList.length!==0 &&isExOpen &&(<ExpenseModal
         isOpen={isExOpen}
         onClose={handleExModalClose}
         expenseList={expenseList}
+        userid={userid}
         onSelectExpense={expenseList}
-      />}
+        localhost={localhost}
+      />)}
       {incomeList.length!==0 && isIncOpen && <IncomeModal
         isOpen={isIncOpen}
-        onClose={handleIncModalClose}
+        onClose={handleExModalClose}
         incomeList={incomeList}
+        userid={userid}
         onSelectIncome={incomeList}
+        localhost={localhost}
       />}
-              
-                 <div style={{ position: 'fixed', bottom: '20px', right: '30%',  width: '80px', 
-                     height: '80px',
-                     backgroundColor: '#DAA520',
-                     borderRadius: '50%', // Makes it fully rounded
-                     cursor: 'pointer', }}> 
-                     <button style={{backgroundColor: '#DAA520',borderRadius:'50%'}} onClick={() =>{setIsFABOpen(!isFABOpen);setIsExOpen(!isExOpen);setIsIncOpen(!isIncOpen)}}>
+
+        {bankList.length!==0 && isBnkOpen && <BankModal
+        isOpen={isBnkOpen}
+        onClose={handleExModalClose}
+        bankList={bankList}
+        userid={userid}
+        onSelectBank={bankList}
+        localhost={localhost}
+      />} 
+      {assetList.length!==0 && isAstOpen && <AssetModal
+        isOpen={isAstOpen}
+        onClose={handleExModalClose}
+        assetList={assetList}
+        userid={userid}
+        onSelectAsset={assetList}
+        localhost={localhost}
+      />}   
+                 <div style={{
+        position: "absolute",
+        top: position.y,
+        left: position.x,
+        width: "80px",
+        height: "80px",
+        backgroundColor: "#DAA520",
+        borderRadius: "50%", // Makes it fully rounded
+        cursor: "pointer",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        zIndex: 1000, // Ensure it stays above other elements
+      }} 
+      onMouseDown={handleDragStart}
+      onMouseMove={handleDrag}
+      onMouseUp={handleDragEnd}
+      onMouseLeave={handleDragEnd} // Stop dragging if the mouse leaves the button
+      onTouchStart={handleDragStart} // Support for touch devices
+      onTouchMove={handleDrag} // Support for touch devices
+      onTouchEnd={handleDragEnd} // Support for touch devices
+      > 
+                     <button style={{
+          backgroundColor: "#DAA520",
+          borderRadius: "50%",
+          width: "100%",
+          height: "100%",
+          border: "none",
+          outline: "none",
+          boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.2)",
+          cursor: "pointer",
+        }} onClick={() =>{setIsFABOpen(!isFABOpen);setIsExOpen(false);setIsIncOpen(false)}}>
                      <i className="fas fa-plus"></i> GL Posting
                 </button>
              
@@ -140,16 +248,16 @@ const handleIncModalClose = () => {
                   position: 'absolute', 
                   bottom: '50px', 
                   left: '50%', 
-                  transform: 'translateX(-100%)', 
+                  transform: 'translateX(30%)', 
                   display: 'flex', 
                   flexDirection: 'row', 
                   alignItems: 'center', 
                   zIndex: 1000 
                 }}
-              >                <button hidden={isIncOpen} style={{borderRadius:'50%'}}onClick={handleIncome}>Income</button>
-                <button style={{borderRadius:'50%',backgroundColor:'#FF6666'}} onClick={handleExpense}>Expense</button>
-                <button style={{borderRadius:'50%'}}onClick={() => alert('In Progress...')}>Bank</button>
-                <button style={{borderRadius:'50%'}}onClick={() => alert('In Progress...')}>Asset</button>
+              > <button hidden={isIncOpen} style={{borderRadius:'50%'}}onClick={handleIncome}>{isIncOpen===false?'Income':"Running..."}</button>
+                <button style={{borderRadius:'50%',backgroundColor:'#FF6666'}} onClick={handleExpense}>{isExOpen===false?'Expense':"Running..."}</button>
+                <button style={{borderRadius:'50%'}}onClick={handleBank}>{isBnkOpen===false?'Bank':"Running..."}</button>
+                <button style={{borderRadius:'50%'}}onClick={handleAsset}>{isAstOpen===false?'Asset':"Running..."}</button>
                 
                 </div>
                    )}

@@ -1,37 +1,68 @@
 import React, { useState } from 'react';
+import axios from 'axios';
+import loadingGif from './loading.gif'; // Your loading gif file
 
-const IncomeModal = ({ isOpen, onClose, incomeList, onSelectExpense }) => {
+const IncomeModal = ({ isOpen, onClose, incomeList,localhost,userid }) => {
     const [selectedIncome,setSelectedIncome]=useState('');
     const [description,setDescription]=useState('');
+    const [brcode,setBrcode]=useState('');
     const [code,setCode]=useState('');
     const [amount,setAmount]=useState('');
+    const [error, setError] = useState(null);
+    const [posting, setPosting] = useState(false);
 
-  if (!isOpen) return null; // Don't render if the modal is not open
+  // if (!isOpen) return null; // Don't render if the modal is not open
 
   const handleSelectIncome = (e) => {
     const glCode=e.target.value;
     setSelectedIncome(glCode); // Set selected expense
-    setCode(glCode.slice(0,9));
-    setDescription(glCode.slice(9))
-    console.log(glCode,code,description)
+    setCode(glCode.slice(0,5));
+    setBrcode('00'+glCode.slice(6,7));
+    setDescription(glCode.slice(8))
+   
     
   };
  const handleAmount = (e) => {
     setAmount(e.target.value); // Set selected expense
-    console.log(`Amount: ${e.target.value}`);
+   
   };
-
+// const handleIncModalClose =()=>{
+//   onClose();
+// }
   const handleDescription = (e) => {
-    setDescription(e.target.value); // Set selected expense
-    console.log(`description: ${e.target.value}`);
+    setDescription(e.target.value); 
+   
   };
+  const handleSubmit = async(e) => {
+    try 
+    {
+      setPosting(true);
+   const response=await axios.post(`${localhost}/journaltransactions`,{amount, 
+    debitGL:'11102-'+brcode, 
+    creditGL:code+'-'+brcode , 
+    comment:description, 
+    createdBy:userid,
+    journalType:'I',
+    branchCode:brcode});
+    alert(response.data);
+    setPosting(false);
+    setError(response.data)
+   }
+   catch(error){ setPosting(false); setError(error)}
+  };
+ 
+
   return (
     <div style={{ zIndex: 1000, position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}
       >
       <div style={styles.modal}>
-        <button onClick={onClose} style={styles.closeButton}>X</button>
+      {error && (
+         <p className="error" style={error.includes('successful') ? { color: 'green' } : { color: 'red' }}>
+          {error}
+          </p>
+           )}
         <h3>Select Income</h3>
-        <select onChange={onSelectExpense} style={styles.select}>
+        <select onChange={handleSelectIncome } style={styles.select}>
           <option value="">-- Select an income --</option>
         {incomeList.length!==0 && incomeList.map((income, index) => (
             <option key={index} value={income}>{income}</option>
@@ -53,8 +84,9 @@ const IncomeModal = ({ isOpen, onClose, incomeList, onSelectExpense }) => {
         style={{ flex: 2 }}> 
        
         </input>
-        <button>Save</button>
-        <button style={{backgroundColor:'#FF9999'}} OnClick={onClose}>Close</button>
+        <button onClick={handleSubmit}>{posting ? <img src={loadingGif} alt="Loading..." style={{ width: '7%', height: '7%' }} />
+        : 'Save'}</button>
+        <button style={{backgroundColor:'#FF9999'}} onClick={onClose}>Close</button>
       </div>
     </div>
   );

@@ -3,47 +3,54 @@ import axios from 'axios';
 import loadingGif from './loading.gif'; // Your loading gif file
 
 
-const ExpenseModal = ({ isOpen, onClose,localhost, expenseList,userid, onSelectExpense }) => {
-    const [selectedExpense,setSelectedExpense]=useState('');
+const AssetModal = ({ isOpen, onClose,localhost, assetList,userid, onSelectAsset }) => {
+    const [selectedAsset,setSelectedAsset]=useState('');
     const [description,setDescription]=useState('');
     const [code,setCode]=useState('');
     const [brcode,setBrcode]=useState('');
     const [amount,setAmount]=useState('');
+    const [ tranxType, setTranxType]=useState('Debit|Increase');
     const [error, setError] = useState(null);
     const [posting, setPosting] = useState(false);
    
-  if (!isOpen) return null; // Don't render if the modal is not open
 
-  const handleSelectExpense = (e) => {
+    const handleSelectType = (e) => {
+        setError('');
+        setTranxType(e.target.value);
+        
+      };
+
+  const handleSelectAsset = (e) => {
+    setError('');
     const glCode=e.target.value;
-    setSelectedExpense(glCode); // Set selected expense
+    setSelectedAsset(glCode); // Set selected expense
     setCode(glCode.slice(0,5));
     setBrcode('00'+glCode.slice(6,7));
-    setDescription(glCode.slice(8))
-   
+    setDescription(tranxType+' of '+glCode.slice(8))
+    
   };
   const handleExModalClose = () => {
     onClose(); // Close modal
   };
  const handleAmount = (e) => {
-    setAmount(e.target.value); 
+    setAmount(e.target.value); // Set selected expense
    
   };
 
   const handleDescription = (e) => {
-    setDescription(e.target.value); 
-   
+    setDescription(e.target.value);
+
   };
   const handleSubmit = async(e) => {
     try
     {
       setPosting(true);
    const response=await axios.post(`${localhost}/journaltransactions`,{amount, 
-    debitGL:code+'-'+brcode, 
-    creditGL:'11102-'+brcode, 
+    debitGL:tranxType==='Debit|Increase'?code+'-'+brcode:'11102-'+brcode, 
+    creditGL:tranxType==='Debit|Increase'?'11102-'+brcode:code+'-'+brcode, 
     comment:description, 
     createdBy:userid,
-    journalType:'E',
+    journalType:'A',
     branchCode:brcode
   });
     alert(response.data);
@@ -64,11 +71,16 @@ const ExpenseModal = ({ isOpen, onClose,localhost, expenseList,userid, onSelectE
           {error}
           </p>
            )}
-        <h3>Select Expense</h3>
-        <select onChange={handleSelectExpense} style={styles.select}>
-          <option value="">-- Select an expense --</option>
-          {expenseList && expenseList.map((expense, index) => (
-            <option key={index} value={expense}>{expense}</option>
+            <label>Transaction Type</label>
+           <select onChange={handleSelectType} style={styles.select}>
+          <option value="Debit|Increase">Debit|Increase</option>
+          <option  value="Credit|Decrease">Credit|Decrease</option>
+        </select>
+        <label>Select Asset</label>
+        <select onChange={handleSelectAsset} style={styles.select}>
+          <option value="">-- Select an Asset --</option>
+          {assetList && assetList.map((asset, index) => (
+            <option key={index} value={asset}>{asset}</option>
           ))}
         </select>
         
@@ -133,4 +145,4 @@ const styles = {
   },
 };
 
-export default ExpenseModal;
+export default AssetModal;

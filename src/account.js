@@ -173,7 +173,7 @@ const handledisbModal=async ()=>{
     let bal=0;
     // //calculate running history from amount in data
      const dataWithRunningBal=data.map((item)=>{
-      console.log(bal);
+      
       
       const isAmountNegative = item.tranid === '005' || item.tranid === 'R001' || item.tranid === 'R002' || item.tranid === '059' || item.tranid === '010' || item.tranid === 'R010';
       bal = isAmountNegative ? bal - item.amount : bal + item.amount;
@@ -181,7 +181,7 @@ const handledisbModal=async ()=>{
       return item;
      })
      setAccountHistory(dataWithRunningBal);
-     console.log(dataWithRunningBal);
+    //  console.log(dataWithRunningBal);
       
     
     setMessage('Search successful');
@@ -196,8 +196,7 @@ const handledisbModal=async ()=>{
 const handleDetail = async (accountid,balance) => {
   setIsDetailOpen(true);
   setBalance(balance);
-  // console.log("Account ID:", accountid);
-  // setIsDetailOpen(true); // Open modal initially
+ 
 
   try {
     const custno = clientData.custno; // Ensure clientData is defined
@@ -207,8 +206,7 @@ const handleDetail = async (accountid,balance) => {
     const accountDetailArray = data.map(item => item); // Extract data
 
     setAccountDetail(accountDetailArray);
-    console.log("Account Details:", accountDetailArray); // Log details
-    console.log(isDetailOpen);
+    
     setMessage('Search successful');
   } catch (error) {
     setError(error.message);
@@ -326,7 +324,7 @@ setSignPreview (signSource);
    localhost={localhost}   
    
    />} <button className="search-btn" onClick={handledisbModal}>Disbursement</button></div>
-     <div>{showDisbModal &&<DisbursementModal userid={userid} products={products} isOpen={true} onClose={handleDisbModalClose}  AccountID={trxAccountID}  AccountName={trxAccName} CustNo={clientData.custno}  accountName={clientData.accountname} localhost={localhost} GroupID={clientData.groupid} />}</div>
+     <div>{showDisbModal &&<DisbursementModal userid={userid} products={products} isOpen={true} onClose={handleDisbModalClose}  AccountID={trxAccountID}  AccountName={trxAccName} CustNo={clientData.custno}  accountName={clientData.Accountname} localhost={localhost} GroupID={clientData.groupid} />}</div>
  
 
       <form>

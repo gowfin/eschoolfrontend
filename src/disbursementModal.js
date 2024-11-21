@@ -62,6 +62,7 @@ const DisbursementModal = ({ isOpen, onClose,CustNo,accountName,userid, products
  
   const handleCalculateSchedule = async () => {
     try {
+   
       // console.log( selectedProduct,amount,clientId);
       setSchedule('');
       setSearching2(true);
@@ -71,9 +72,9 @@ const DisbursementModal = ({ isOpen, onClose,CustNo,accountName,userid, products
         clientID: clientId,
         productSettings:adjustDefaultProductSettings,
         adjustedProdInstalCount:instalCount,
-        monthCount:monthCount,
+        monthCount:monthCount?monthCount:0,
         adjInstalCount:adjInstalCount,
-        selectedInterestType,
+        selectedInterestType:selectedInterestType,
         includeSaturday:checked,
         disbursedDate:disbDate,
         selectedProduct
@@ -112,7 +113,8 @@ const DisbursementModal = ({ isOpen, onClose,CustNo,accountName,userid, products
         selectedInterestType:selectedInterestType==='Reducing'? '1.00':selectedInterestType==='EMI/EWI'?
         "1.0":checked? "0.1":"1",
         disbursedDate:disbDate,
-        GroupID
+        GroupID,
+        installment: adjInstalCount!=='all' && selectedProduct.includes('IND') ? adjInstalCount:adjInstalCount!=='BI' && selectedProduct.includes('REGLN')? '12':'0.00'
       });
 
       if (response.data.success) {
@@ -304,7 +306,7 @@ const DisbursementModal = ({ isOpen, onClose,CustNo,accountName,userid, products
 
         {/* Close Button */}
         <div style={{ textAlign: 'right', marginTop: '10px' }}>
-          <button onClick={handleClose}>Close</button>
+          <button style={{backgroundColor:'#FF9999'}}onClick={handleClose}>Close</button>
         </div>
       </div>
     </div>
