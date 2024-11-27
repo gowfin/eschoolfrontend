@@ -1,4 +1,4 @@
-import {React,useState} from 'react';
+import {React,useState,useEffect} from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import ExpenseModal from './ExpenseModal';
@@ -83,6 +83,16 @@ const handleDragStart = (e) => {
 const toggleVisibility = () => {
     setIsDivVisible(!isDivVisible);
 };
+useEffect(() => { // This will clear all the state and logout the user when the user attempts a new login
+  const params = new URLSearchParams(window.location.search);
+  const compname = params.get("p");
+  if(compname){
+  setLoggedIn(false);
+  localStorage.removeItem('appState'); // Clear saved app state
+  localStorage.setItem('loggedIn', 'false'); // Update login state
+  navigate(`/?p=${compname}`); // Redirect to the login page
+  }
+},[])
 
   const toggleDropdown = () => {
     setDropdownOpen(!isDropdownOpen);

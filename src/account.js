@@ -10,7 +10,7 @@ import DisbursementModal  from './disbursementModal';
 
 
 const AccountPage = ({ state, setState }) => {
-  const {localhost}= state;
+  const {localhost,sesdate}= state;
   const [searching, setSearching] = useState(false);
   const [searchingName, setSearchingName] = useState(false);
   const [pixPreview, setPixPreview] = useState(null);
@@ -550,7 +550,7 @@ setSignPreview (signSource);
       </div>
       <div className="footer-div">
         <div className="footer-stats">
-          <p>Last Transaction Date: {new Date().toLocaleDateString()}</p>
+          <p>Current Session Date: {sesdate &&sesdate.slice(0,10)}</p>
           <div><button className="footer-button">Display History</button></div>
           <div><button className="footer-button">Change Account Status</button></div>
         </div>

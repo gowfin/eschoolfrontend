@@ -1,0 +1,30 @@
+.report-table {
+    border: 1px solid #ccc; /* Adds a border around the table */
+    font-size: 0.8em; /* Compact font size, adjusted for readability */
+    text-align: left; /* Default alignment for table content */
+    margin: 0 auto; /* Centers the table */
+    table-layout: auto; /* Adjusts column width based on content */
+    width: 100%; /* Stretches the table to the container's width */
+    max-width: 1423px; /* Fits within A4 landscape width */
+    border-collapse: collapse; /* Merges cell borders for a clean look */
+  }
+  
+  .report-table th, 
+  .report-table td {
+    padding: 5px; /* Moderate padding for better spacing */
+    border: 1px solid #ccc; /* Adds a subtle border for readability */
+    word-wrap: break-word; /* Allows text to wrap within cells */
+    white-space: normal; /* Ensures content wraps */
+  }
+  
+  .report-table th {
+    background-color: #6adaaf; /* Highlights header rows */
+    text-align: center; /* Centers header text */
+    font-weight: bold; /* Emphasizes header text */
+  }
+  
+  .report-table td {
+    text-align: left; /* Aligns text in cells to the left */
+  }
+  
+  

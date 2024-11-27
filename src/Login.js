@@ -20,9 +20,12 @@ const Login = ({ setLoggedIn, state, setState, isModalOpen, setIsModalOpen, bran
   const [products, setProducts] = useState({});
   const [companyname, setCompanyname] = useState('');
   const [localhost,setLocalhost]=useState('');
+  const [licenseExpired,setLicenseExpired]=useState(true);
+  const [sesdate,setSesdate]=useState('');
 
   
     useEffect(() => {
+      setMessage('Processing ... Wait...');
       const params = new URLSearchParams(window.location.search);
       const compname = params.get("p");
       setCompanyname(compname);
@@ -36,10 +39,39 @@ const Login = ({ setLoggedIn, state, setState, isModalOpen, setIsModalOpen, bran
   
       // Redirect to the main URL without parameters
       if (companyname) {
-        localStorage.clear();
+        // localStorage.clear();
         window.location.href = firstPart;
       }
     }, []); // Empty dependency array to run only on mount
+
+    useEffect(() => {
+      setMessage('Wait...loading your settings');
+      const checkLicense = async () => {
+                try {
+          
+          const response = await axios.post(`${localhost}/checklicense`);
+          setMessage(response.data.message);
+          setSesdate(response.data.sesdate);
+          
+          if (
+            response.data.message === 'License has expired. Please renew' || 
+            response.data.message === 'Error occurred while checking license'
+          ) {
+            setLicenseExpired(true);
+          } else {
+            setLicenseExpired(false);
+          }
+        } catch (error) {
+          setMessage(error.response?.data?.message || 'Error occurred while checking license.');
+          setLicenseExpired(true); // Assume expired in case of error
+        }
+      };
+      const newLocalhost =  getLocalhost(companyname); // Wait for the async function to resolve
+      setLocalhost(newLocalhost); // Update the state
+
+      checkLicense();
+    },[localhost],[companyname]);
+    
   
 /////////////////////////////////////
   const togglePasswordVisibility = () => {
@@ -52,7 +84,8 @@ const Login = ({ setLoggedIn, state, setState, isModalOpen, setIsModalOpen, bran
       setLoggedIn(true);
       setState(prevState => ({
         ...prevState,
-        branch: selectedBranch
+        branch: selectedBranch,
+        sesdate:sesdate
         
       }));
       setLoggedIn(true); // Update login state
@@ -80,7 +113,7 @@ const Login = ({ setLoggedIn, state, setState, isModalOpen, setIsModalOpen, bran
 
         if (response.data.status === 'successful') {
           setMessage("Login successful");
-
+          console.log(sesdate);
           // Fetch branch details here
           await fetchBranchDetails();
 
@@ -128,7 +161,8 @@ const Login = ({ setLoggedIn, state, setState, isModalOpen, setIsModalOpen, bran
         biztype: biztypeArray,
         products:data,
         localhost:localhost,
-        companyname:companyname
+        companyname:companyname,
+        sesdate:sesdate
         
       }));
     } catch (err) {
@@ -172,13 +206,13 @@ const Login = ({ setLoggedIn, state, setState, isModalOpen, setIsModalOpen, bran
               {showPassword ? <FaEyeSlash /> : <FaEye />}
             </button>
           </div>
-          <button type="submit" disabled={loading} className="fancy-button">
+          {!licenseExpired && <button type="submit" hidden={licenseExpired} disabled={loading} className="fancy-button">
             {loading ? (
               <img src={loadingGif} alt="Loading..." style={{ width: '20px', height: '20px' }} />
             ) : (
               "Login"
             )}
-          </button>
+          </button>}
         </form>
         {message && <p className="message" style={{
           color: message.includes('successful') ? 'green' : 'red',

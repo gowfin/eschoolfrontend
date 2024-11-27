@@ -3,7 +3,7 @@ import { getOrgName  } from './orgname.js';
 
 const Dashboard = ({ state, setState }) => {
  
-    const { branch, logindata, groups, biztype,userid,userrole,status,localhost,companyname } = state || {};
+    const { branch, logindata, groups, biztype,userid,userrole,status,localhost,companyname,sesdate } = state || {};
     return (
       
       <div>
@@ -23,7 +23,7 @@ const Dashboard = ({ state, setState }) => {
     
   </div>
   <h3 style={{color:'gold'}}>Welcome back {userid} . You logged in as {userrole}.</h3>
-  <h3 style={{color:'purple'}}>{branch}</h3>
+  <h3 style={{color:'purple'}}>{branch} Your Session date is {sesdate&&sesdate.slice(0,10)}</h3>
       <div 
         style={{
           backgroundImage: `url(${process.env.PUBLIC_URL}/Resource/gland.jpg)`,

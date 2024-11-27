@@ -8,7 +8,7 @@ import { FaFilePdf, FaFileExcel, FaPrint } from 'react-icons/fa';
 // import { localhost } from './env.js';
 
 const Report = ({ state, setState }) => {
-  const {localhost}= state || 'localhost:3000';
+  const {localhost,sesdate}= state;
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
