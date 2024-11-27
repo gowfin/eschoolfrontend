@@ -23,6 +23,20 @@ const handleExportToPDF = () => {
   if (!mainContent) return;
 
   const doc = new jsPDF('landscape', 'mm', 'a4'); // Landscape mode for wider tables
+   // Add custom text
+   doc.setFontSize(13); // Set font size
+   doc.setTextColor(255, 215, 0); // Gold color for the title
+   doc.text(`[Gowfin]         ${state.companyname} FIELD COLLECTION SHEET`, 10, 10);
+ 
+   doc.setFontSize(10); // Smaller font for the additional details
+   doc.setTextColor(0, 0, 0); // Black color
+   doc.text(
+     `Loan Officer's Name: 'CSO', Union Name: ${groupname}, Printed on: ${new Date().toLocaleDateString()}`, 
+     10, 
+     20
+   );
+ 
+ 
 
   // Extract table data
   const table = mainContent.querySelector('table');
@@ -35,7 +49,7 @@ const handleExportToPDF = () => {
   autoTable(doc, {
     head: [headers],
     body: rows,
-    startY: 10, // Start table below the top margin
+    startY: 26, // Start table below the top margin
     styles: {
       fontSize: 8, // Adjust font size for fitting content
       cellPadding: 0, // Minimize padding for more space
@@ -147,6 +161,9 @@ const calculateTotals = () => {
 };
 
 const totals = calculateTotals();
+
+
+
 const handlePrint = () => {
   const mainContent = document.querySelector('main').outerHTML; // Get only the main content
   const printWindow = window.open('', '_blank'); // Open a new window
@@ -207,7 +224,6 @@ const handlePrint = () => {
         <p>
           <strong>Loan Officer's Name:</strong> {loanOfficer}, <strong>Union Name:</strong> {groupname}  Printed on: {new Date().toLocaleDateString()}
         </p>
-         <section>
 
           <table className="report-table" aria-label="Field Collection Report" >
      <thead>
@@ -296,7 +312,7 @@ const handlePrint = () => {
 
             </tbody>
           </table>
-        </section>
+        
       </main>
     </div>
   );
