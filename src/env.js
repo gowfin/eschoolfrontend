@@ -7,7 +7,7 @@
                    
                }
                else if (companyName.toUpperCase() === 'MACMAY') {
-                    //    return 'http://localhost:3005';
+                        // return 'http://localhost:3005';
                      return 'https://gowfinbackend.onrender.com';
             }
                else if (companyName.toUpperCase() === '2HAPI') {

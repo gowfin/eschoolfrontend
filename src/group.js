@@ -37,7 +37,7 @@ const handleRowClick = (id) => {
         try {
             setSearching(true);
             setMessage('');
-            const response = await axios.post(`${localhost}/getfieldprint`, { code });
+            const response = await axios.post(`${localhost}/getfieldprintpostinggroup`, { code });
            const data = response.data;
          
             // Combine products and data when they are both available

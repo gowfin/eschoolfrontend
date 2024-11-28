@@ -30,7 +30,7 @@ const App = () => {
   const [isModalOpen, setIsModalOpen] = useState(false); // Manage modal state
   const [branches, setBranches] = useState([]); // State for branches
   const [modalIsOpen, setModalIsOpen] = useState(false); //set individual workflow to load automatically
-
+  const [isNavbarShowing,setIsNavbarShowing]=useState(true);
   // Persist login state across page reloads
   useEffect(() => {
     localStorage.setItem('loggedIn', loggedIn.toString());
@@ -46,7 +46,7 @@ const App = () => {
   return (
     <Router>
       <div style={{ display: 'flex' }}>
-        {loggedIn && <NavBar setLoggedIn={setLoggedIn} state={state} />}
+        {loggedIn && isNavbarShowing&&<NavBar setLoggedIn={setLoggedIn} state={state} setIsNavbarShowing={setIsNavbarShowing} />}
         <div style={{ padding: '20px', flex: 1 }}>
           <Routes>
             {!loggedIn ?  
@@ -83,8 +83,31 @@ const App = () => {
                 <Route path="/workflow/single" element={<Single state={state} modalIsOpen={true} setModalIsOpen={setModalIsOpen}/>} />
 
               </>
-            )}
+            )}     
           </Routes>
+          {loggedIn&& (
+              <div
+                style={{
+                  position: "fixed",
+                  top: "0",
+                  left: "0",
+                  width: "5%",
+                  height: "20px",
+                  borderRadius:'50%',
+                  backgroundColor: "#333",
+                  color: "#fff",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  cursor:'pointer',
+                  zIndex: 999}}>
+                 <i
+                  style={{
+                    fontSize: "10px",
+                    color: "#fff",
+                  }}
+                  onClick={()=>{setIsNavbarShowing(!isNavbarShowing)}}
+                >{isNavbarShowing?'hide NavBar':'Show NavBar'}</i></div>)}
         </div>
       </div>
     </Router>

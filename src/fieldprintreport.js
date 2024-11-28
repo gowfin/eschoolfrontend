@@ -1,20 +1,20 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
 import jsPDF from 'jspdf';
-import 'jspdf-autotable';
+// import 'jspdf-autotable';
 import autoTable from 'jspdf-autotable';
-import { utils, writeFile } from 'xlsx';
+import { FaFilePdf, FaEye, FaPrint } from 'react-icons/fa';
 import loadingGif from './loading.gif'; 
-import './fieldprintreport.css'
+import './fieldprintreport.css';
 const Report = ({ state, setState }) => {
-  const localhost = state?.localhost || 'http://localhost:3005';
+  const localhost = state?.localhost;
   const branch = state?.branch.slice(0, 3) || '002';
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [groupname, setGroupname] = useState('Individual');
 
-  const compname = state.compname;
+  const companyname = state.companyname;
   const loanOfficer = '';
 
 const handleExportToPDF = () => {
@@ -26,7 +26,7 @@ const handleExportToPDF = () => {
    // Add custom text
    doc.setFontSize(13); // Set font size
    doc.setTextColor(255, 215, 0); // Gold color for the title
-   doc.text(`[Gowfin]         ${state.companyname} FIELD COLLECTION SHEET`, 10, 10);
+   doc.text(`[Gowfin]         ${companyname} FIELD COLLECTION SHEET`, 10, 10);
  
    doc.setFontSize(10); // Smaller font for the additional details
    doc.setTextColor(0, 0, 0); // Black color
@@ -67,7 +67,122 @@ const handleExportToPDF = () => {
   doc.save('field-collection-sheet.pdf');
 };
 
-  
+  ////Function sanitize the field print
+  function RemoveDuplicate(data) {
+    // Create Sets to track unique custno-Lnid pairs and savings values
+    const seen = new Set();
+    const seenSavings = {};
+
+    // Define the list of savings fields to track
+    const savingsFields = [
+        'Regular Savings',
+        'Voluntary Savings',
+        'Future Savings',
+        'MyPikin Savings',
+        'Daily Savings' ,
+        'DASCA Savings',
+        'Fixed Savings',
+        'Staff Savings',
+        // Add Daily Savings here
+    ];
+
+    // Create the purged data array
+    const purgeddata = data.filter(item => {
+        const uniqueKey = `${item.custno}-${item.Lnid || item.Lnid2}`; // Use custno and Lnid as unique key
+
+        // Check if the custno-Lnid pair has been seen before
+        if (seen.has(uniqueKey)) {
+            // Zero out duplicate savings values
+            for (let key of savingsFields) { // Iterate over all savings fields
+                const value = item[key];
+
+                // If the value is not null and has been seen before, set it to 0
+                if (value !== null && seenSavings[key] && seenSavings[key].has(value)) {
+                    item[key] = 0; // Set duplicate savings to 0
+                } else if (value !== null) {
+                    // Otherwise, add the value to the seen set for that savings field
+                    if (!seenSavings[key]) {
+                        seenSavings[key] = new Set(); // Initialize the Set for the key if it doesn't exist
+                    }
+                    seenSavings[key].add(value); // Add the value to the set of seen savings values
+                }
+            }
+            return true; // Keep the item, but with updated savings values
+        }
+
+        // If the custno-Lnid pair has not been seen, add it to the seen set
+        seen.add(uniqueKey);
+
+        // Zero out duplicate savings for this item if applicable
+        for (let key of savingsFields) { // Iterate over all savings fields
+            const value = item[key];
+            if (value !== null && seenSavings[key] && seenSavings[key].has(value)) {
+                item[key] = 0; // Set duplicate savings to 0
+            } else if (value !== null) {
+                if (!seenSavings[key]) {
+                    seenSavings[key] = new Set(); // Initialize the Set for the key if it doesn't exist
+                }
+                seenSavings[key].add(value); // Add the value to the set of seen savings values
+            }
+        }
+
+        return true; // Keep the first item for unique custno-Lnid pair
+    });
+
+    return purgeddata; // Return the purged data array
+}
+
+//   function RemoveDuplicate(data) {
+//     // Create Sets to track unique custno-Lnid pairs and savings values
+//     const seen = new Set();
+//     const seenSavings = {};
+
+//     // Create the purged data array
+//     const purgeddata = data.filter(item => {
+//         const uniqueKey = `${item.custno}-${item.Lnid || item.Lnid2}`;  // Use custno and Lnid as unique key
+
+//         // Check if the custno-Lnid pair has been seen before
+//         if (seen.has(uniqueKey)) {
+//             // Zero out duplicate savings values
+//             for (let key of ['Regular Savings', 'Voluntary Savings', 'Future Savings', 'MyPikin Savings','Daily Savings','DASCA Savings']) {
+//                 const value = item[key];
+
+//                 // If the value is not null and has been seen before, set it to 0
+//                 if (value !== null && seenSavings[key] && seenSavings[key].has(value)) {
+//                     item[key] = 0;  // Set duplicate savings to 0
+//                 } else if (value !== null) {
+//                     // Otherwise, add the value to the seen set for that savings field
+//                     if (!seenSavings[key]) {
+//                         seenSavings[key] = new Set();  // Initialize the Set for the key if it doesn't exist
+//                     }
+//                     seenSavings[key].add(value);  // Add the value to the set of seen savings values
+//                 }
+//             }
+//             return true;  // Keep the item, but with updated savings values
+//         }
+
+//         // If the custno-Lnid pair has not been seen, add it to the seen set
+//         seen.add(uniqueKey);
+
+//         // Zero out duplicate savings for this item if applicable
+//         for (let key of ['Regular Savings', 'Voluntary Savings', 'Future Savings', 'MyPikin Savings']) {
+//             const value = item[key];
+//             if (value !== null && seenSavings[key] && seenSavings[key].has(value)) {
+//                 item[key] = 0;  // Set duplicate savings to 0
+//             } else if (value !== null) {
+//                 if (!seenSavings[key]) {
+//                     seenSavings[key] = new Set();  // Initialize the Set for the key if it doesn't exist
+//                 }
+//                 seenSavings[key].add(value);  // Add the value to the set of seen savings values
+//             }
+//         }
+
+//         return true;  // Keep the first item for unique custno-Lnid pair
+//     });
+
+//     return purgeddata;  // Return the purged data array
+// }
+
   
   const fetchFieldPrint = async () => {
     setLoading(true);
@@ -78,7 +193,12 @@ const handleExportToPDF = () => {
         groupname,
         branch,
       });
-      setData(response.data || []);
+      //eliminating duplicate records based on custno and Lnid, while zeroing out duplicate savings values leave out only the first:
+      const purgeddata=response.data.length>0?RemoveDuplicate(response.data):[];
+      console.log('Data without duplicate:');
+      console.log(purgeddata );
+
+      setData(purgeddata || []);
       setError(response.data.length > 0 ? 'Fetch successful' : `${groupname} not found.`);
     } catch (err) {
       setError(err.response?.data?.error || 'An error occurred while fetching data.');
@@ -182,7 +302,7 @@ const handlePrint = () => {
           table {
             width: 100%; /* Make the table fit the page width */
             border-collapse: collapse;
-            font-size: 8px; /* Reduce font size to fit more columns */
+            font-size: 10px; /* Reduce font size to fit more columns */
           }
           th, td {
             border: 1px solid black;
@@ -191,7 +311,7 @@ const handlePrint = () => {
           }
           @page {
             size: landscape; /* Set page orientation to landscape */
-            margin: 10mm; /* Adjust margins for better fitting */
+            margin: 5mm; /* Adjust margins for better fitting */
           }
         }
       </style>
@@ -214,13 +334,13 @@ const handlePrint = () => {
         onChange={(e) => setGroupname(e.target.value)}
         placeholder="Type group name here and click the View button"
       />
-      <div style={{width:'10%'}}><button onClick={fetchFieldPrint}>
-        {loading ? <img src={loadingGif} alt="Loading..." style={{ width: '30px', height: '30px' }} /> : 'View'}
-      </button> <button onClick={handlePrint}>Print</button> <button onClick={handleExportToPDF}>Export to PDF</button></div>
+      <div style={{width:'5%',display: 'flex', gap: '2px',direction:'row'}}><button style={{color:"#007bff",backgroundColor: 'transparent'}} onClick={fetchFieldPrint}>
+        {loading ? <img src={loadingGif} alt="Loading..." style={{ width: '30px', height: '30px' }} /> :'View'}<FaEye/>
+      </button> <button  style={{color:"#28a745",backgroundColor: 'transparent'}} onClick={handlePrint}><FaPrint/></button> <button style={{color:"#d32f2f",backgroundColor: 'transparent'}} onClick={handleExportToPDF}><FaFilePdf/></button></div>
 
       {error && <p style={{ color: error.includes('successful') ? 'green' : 'red' }}>{error}</p>}
       <main>
-      <span style={{color: 'gold'}}>{state.companyname} FIELD COLLECTION SHEET</span>
+      <span style={{color: 'gold',whiteSpace: 'pre' }}><strong><tab/>{'\t'}{state.companyname} FIELD COLLECTION SHEET</strong></span>
         <p>
           <strong>Loan Officer's Name:</strong> {loanOfficer}, <strong>Union Name:</strong> {groupname}  Printed on: {new Date().toLocaleDateString()}
         </p>
@@ -284,7 +404,7 @@ const handlePrint = () => {
             <td style={{ padding: '2px' }}>{row.overdue>0? ff(row.overdue):0}</td>
             <td style={{ padding: '2px' }}>{''}</td>
             <td style={{ padding: '2px' }}>{row.Expected>0? ff(row.Expected):0}</td>
-            <td style={{ padding: '2px' }}>{row.phone|| ''+"\n"+row.Gphone|| ''+"\n"+row.Gphone2|| '' }</td>
+            <td style={{ padding: '2px' }}>{row.phone || ''}{row.phone && row.Gphone ? <br /> : ''}{row.Gphone || ''}{row.Gphone && row.Gphone2 ? <br /> : ''}{row.Gphone2 || ''}</td>
                 </tr>
               ))}
  {/* Totals Row */}

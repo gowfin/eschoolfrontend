@@ -12,24 +12,16 @@ import {
     FaFileAlt, 
     FaClipboardList, 
     FaSignOutAlt, 
-    FaClipboardCheck, 
     FaProjectDiagram, 
     FaFileContract ,
-    FaHome, 
     FaCogs, 
-    FaTasks, 
-    FaUsers, 
-    FaMoneyBillWave, 
-    FaChartPie, 
-    FaHistory, 
-    FaEnvelope, 
-    FaInfoCircle, 
-    FaLock 
+    FaHistory
+  
 } from 'react-icons/fa';import ChartComponent from './Chart/chart'
 import PieChartComponent from './Chart/incomepiechart'
 
 
-const NavBar = ({ setLoggedIn,state }) => {
+const NavBar = ({ setLoggedIn,state,setIsNavbarShowing }) => {
     const navigate = useNavigate();
     const { branch, logindata, groups, biztype,userid,userrole,status } = state || {};
     const [isDropdownOpen, setDropdownOpen] = useState(false);
@@ -45,6 +37,7 @@ const NavBar = ({ setLoggedIn,state }) => {
     const [expenseList,setExpenseList]=useState([]);
     const [bankList,setBankList]=useState([]);
     const [assetList,setAssetList]=useState([]);
+    
 //HIDE SESSION MGT AND WORKFLOW FOR NON-APPROVING OFFICERS
     const displayadminroles=userrole==='Administrator'||userrole==='Manager';
 // const displayadminroles=false;
@@ -248,7 +241,7 @@ const handleExModalClose = () => {
           outline: "none",
           boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.2)",
           cursor: "pointer",
-        }} onClick={() =>{setIsFABOpen(!isFABOpen);setIsExOpen(false);setIsIncOpen(false)}}>
+        }} onClick={() =>{setIsFABOpen(!isFABOpen);setIsExOpen(false);setIsIncOpen(false);}}>
                      <i className="fas fa-plus"></i> GL Posting
                 </button>
              
