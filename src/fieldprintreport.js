@@ -13,9 +13,12 @@ const Report = ({ state, setState }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [groupname, setGroupname] = useState('Individual');
+  const [officer, setOfficer] = useState('');
+  const [meetingDay, setMeetingDay] = useState('');
+  
 
   const companyname = state.companyname;
-  const loanOfficer = '';
+ 
 
 const handleExportToPDF = () => {
   const mainContent = document.querySelector('main');
@@ -132,56 +135,6 @@ const handleExportToPDF = () => {
     return purgeddata; // Return the purged data array
 }
 
-//   function RemoveDuplicate(data) {
-//     // Create Sets to track unique custno-Lnid pairs and savings values
-//     const seen = new Set();
-//     const seenSavings = {};
-
-//     // Create the purged data array
-//     const purgeddata = data.filter(item => {
-//         const uniqueKey = `${item.custno}-${item.Lnid || item.Lnid2}`;  // Use custno and Lnid as unique key
-
-//         // Check if the custno-Lnid pair has been seen before
-//         if (seen.has(uniqueKey)) {
-//             // Zero out duplicate savings values
-//             for (let key of ['Regular Savings', 'Voluntary Savings', 'Future Savings', 'MyPikin Savings','Daily Savings','DASCA Savings']) {
-//                 const value = item[key];
-
-//                 // If the value is not null and has been seen before, set it to 0
-//                 if (value !== null && seenSavings[key] && seenSavings[key].has(value)) {
-//                     item[key] = 0;  // Set duplicate savings to 0
-//                 } else if (value !== null) {
-//                     // Otherwise, add the value to the seen set for that savings field
-//                     if (!seenSavings[key]) {
-//                         seenSavings[key] = new Set();  // Initialize the Set for the key if it doesn't exist
-//                     }
-//                     seenSavings[key].add(value);  // Add the value to the set of seen savings values
-//                 }
-//             }
-//             return true;  // Keep the item, but with updated savings values
-//         }
-
-//         // If the custno-Lnid pair has not been seen, add it to the seen set
-//         seen.add(uniqueKey);
-
-//         // Zero out duplicate savings for this item if applicable
-//         for (let key of ['Regular Savings', 'Voluntary Savings', 'Future Savings', 'MyPikin Savings']) {
-//             const value = item[key];
-//             if (value !== null && seenSavings[key] && seenSavings[key].has(value)) {
-//                 item[key] = 0;  // Set duplicate savings to 0
-//             } else if (value !== null) {
-//                 if (!seenSavings[key]) {
-//                     seenSavings[key] = new Set();  // Initialize the Set for the key if it doesn't exist
-//                 }
-//                 seenSavings[key].add(value);  // Add the value to the set of seen savings values
-//             }
-//         }
-
-//         return true;  // Keep the first item for unique custno-Lnid pair
-//     });
-
-//     return purgeddata;  // Return the purged data array
-// }
 
   
   const fetchFieldPrint = async () => {
@@ -194,14 +147,16 @@ const handleExportToPDF = () => {
         branch,
       });
       //eliminating duplicate records based on custno and Lnid, while zeroing out duplicate savings values leave out only the first:
-      const purgeddata=response.data.length>0?RemoveDuplicate(response.data):[];
-      console.log('Data without duplicate:');
-      console.log(purgeddata );
+      const purgeddata=response.data.records.length>0?RemoveDuplicate(response.data.records):[];
+      // console.log('Data without duplicate:');
+      // console.log(purgeddata );
 
       setData(purgeddata || []);
-      setError(response.data.length > 0 ? 'Fetch successful' : `${groupname} not found.`);
+      setOfficer(response.data.officer);
+      setMeetingDay(response.data.meetingDay);
+      setError(response.data.records.length > 0 ? 'Fetch successful' : `${groupname} not found.`);
     } catch (err) {
-      setError(err.response?.data?.error || 'An error occurred while fetching data.');
+      setError(err.response?.data?.records?.error || 'An error occurred while fetching data.');
     } finally {
       setLoading(false);
     }
@@ -342,7 +297,8 @@ const handlePrint = () => {
       <main>
       <span style={{color: 'gold',whiteSpace: 'pre' }}><strong><tab/>{'\t'}{state.companyname} FIELD COLLECTION SHEET</strong></span>
         <p>
-          <strong>Loan Officer's Name:</strong> {loanOfficer}, <strong>Union Name:</strong> {groupname}  Printed on: {new Date().toLocaleDateString()}
+          <strong>Loan Officer's Name:</strong> {officer}, <strong>Union Name:</strong> {groupname} <strong> Meeting Day:</strong> {meetingDay}  <span style={{color:'brown',margin:'10%'}}>{'                           '}Printed on: {new Date().toLocaleDateString()}</span>
+        
         </p>
 
           <table className="report-table" aria-label="Field Collection Report" >
