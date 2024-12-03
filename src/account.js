@@ -133,7 +133,7 @@ else{ setMessage('No custno found.You need to Search for a client first.');}
   }
   const handleSearch = async (e) => {
     e.preventDefault();
-    setMessage("Search... account details");
+    setMessage("Searching... account details");
     setPixPreview ("");
     setSignPreview ("");
     setSearching(true);
@@ -232,13 +232,16 @@ const handleDetail = async (accountid,balance) => {
 const handleVerifyBal = async (custno, LoanID, AccountID,loanbal, savBal, balance, accname, userid) => {
   
    const balToAdjustTo=LoanID ? loanbal:savBal;
-   const positivebal=LoanID ? -balance:balance;
+  //  const positivebal=LoanID ? -balance:balance;
+  const positivebal=balance;
 //  console.log(balance,balToAdjustTo);
   if (balance !== balToAdjustTo) {
     setAdjusting(true);
     try {
-      const baldiff= LoanID ? positivebal-balToAdjustTo : Math.abs(positivebal-balToAdjustTo);
-      // alert(baldiff);
+      // const baldiff= LoanID ? positivebal-balToAdjustTo : Math.abs(positivebal-balToAdjustTo);
+      const baldiff= balToAdjustTo-positivebal;
+ 
+      // // alert(baldiff);
       // console.log(custno, LoanID, AccountID,loanbal, savBal, balance, accname, userid);
       const response = await axios.post(`${localhost}/insert_balancediff`, { custno,LoanID,AccountID,balToAdjustTo,balance,baldiff,accname,userid });
      

@@ -2,8 +2,9 @@
           export const getLocalhost = (companyName) => {
                if (!companyName) {return "https://gowfinbackend.onrender.com";}
                else if (companyName.toUpperCase() === 'BLESSED') {
+                   //   return 'http://localhost:3005';  
                   return 'https://gowfinblessedbackend.vercel.app';
-                //   return 'http://localhost:3005';
+               
                    
                }
                else if (companyName.toUpperCase() === 'MACMAY') {
