@@ -43,9 +43,11 @@ const AccountPage = ({ state, setState }) => {
   const [trxAccountID,setTrxAccountID]=useState('');
   const [trxRunningBal,setTrxRunningBal]=useState('');
   const [trxAccName,setTrxAccName]=useState('');
-  
+  const [showAllAccounts, setShowAllAccounts] = useState(false);
+    
 ///search for custno from client creation
 useEffect(() => {
+ 
   // Function to parse query parameters
   const queryParams = new URLSearchParams(location.search);
   const custnoFromQuery = queryParams.get('custno') || '';
@@ -58,6 +60,7 @@ useEffect(() => {
 }, [location]);
 
   const handleSearchName = async () => {
+  
     setSearchingName(true);
       if (accountNameTyped.length>2) {
           try {
@@ -104,7 +107,20 @@ const getIDFormat=( num )=>{
   return   String(num).padStart(7, '0');
    
 }
-
+const handleNewAccount = async (e) => {
+  e.preventDefault();
+  if(clientData.custno.length>0){
+    setMessage(`wait !...creating new savings account- ${e.target.value }.`);
+  try {
+    // console.log(clientData);
+    const response = await axios.post(`${localhost}/newaccount`, {custno:clientData.custno, name:clientData.Accountname, groupID:clientData.groupid,product:e.target.value });
+    setMessage(response.data);
+  } catch (error) {
+    setMessage(error.response?.data || "An error occurred.");
+  }
+}
+else{ setMessage('No custno found.You need to Search for a client first.');}
+};
 
 
   const handleBlur=(e)=>{
@@ -117,7 +133,7 @@ const getIDFormat=( num )=>{
   }
   const handleSearch = async (e) => {
     e.preventDefault();
-    setMessage("");
+    setMessage("Search... account details");
     setPixPreview ("");
     setSignPreview ("");
     setSearching(true);
@@ -134,7 +150,7 @@ const getIDFormat=( num )=>{
       throw new Error('Customer number is required');
     }
 
-      const response = await axios.post(`${localhost}/get_accounts`, { custno });
+      const response = await axios.post(`${localhost}/get_accounts`, { custno,showAllAccounts });
 
       const data = response.data; // Extract data from response
       console.log(data);
@@ -278,8 +294,7 @@ setSignPreview (signSource);
   const accountPageRect = document.querySelector('.account-page').getBoundingClientRect();
   const viewportCenterX =window.innerWidth / 2+e.pageX/6; //window.innerWidth / 2;
   const viewportCenterY = window.innerHeight / 2+e.pageY/2;;
-  // alert(window.innerHeight)
-  // alert(e.pageY)
+  
 
   // Update the state to place the menu at the calculated center position
   setMenuPosition({ x: viewportCenterX, y: viewportCenterY });
@@ -320,10 +335,18 @@ setSignPreview (signSource);
   }
     return (
     <div className="account-page">
+      <div style={{display:'flex',direction:'row',width:'95%'}}><form><select style={{width:'55%'}} name="product"  value="" onChange={handleNewAccount} required>
+            <option  value="">Select to create Account</option>
+           {products.filter((product) => product.name.includes("Savings")).map((product,index)=>(
+          <option key={index} value={product.name.replace(' accounts','')}>{product.name}</option>
+          ))}
+          
+        </select><button style={{width:'40%',leftMargin:'10%'}} className="search-btn" onClick={handledisbModal}>Disbursement</button></form></div>
+
    <div>{isTrxModalOpen &&<TransactionModal userid={userid} products={products} isOpen={true} onClose={handletrxModalClose} isDeposit={transactionType==='Deposit' ? true:false} isWithdr={transactionType==='Withdrawal' ? true:false} isRepay={transactionType==='Repayment' ? true:false} transactionType={transactionType} AccountID={trxAccountID} ProductID={trxProductType} RunningBal={trxRunningBal} AccountName={trxAccName} CustNo={clientData.custno}
    localhost={localhost}   
    
-   />} <button className="search-btn" onClick={handledisbModal}>Disbursement</button></div>
+   />}</div>
      <div>{showDisbModal &&<DisbursementModal userid={userid} products={products} isOpen={true} onClose={handleDisbModalClose}  AccountID={trxAccountID}  AccountName={trxAccName} CustNo={clientData.custno}  accountName={clientData.Accountname} localhost={localhost} GroupID={clientData.groupid} />}</div>
  
 
@@ -360,11 +383,16 @@ setSignPreview (signSource);
             
            
         
-               <div></div>
             {message && <p className="message" style={{ color: message.includes('successful') ? 'green' : 'red' }}>{message}</p>}
-            <button className="search-btn" disabled={searching} onClick={handleSearch}>
+            <div style={{display:'flex',direction:'column',alignItems: 'center', justifyContent: 'space-between', margin: '0px', gap: '10px' }}>
+            <span style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+            <input type="checkbox" id="showAllAccounts" name="showAllAccounts"  onChange={() => setShowAllAccounts(!showAllAccounts)}/>
+            <label htmlFor="showAllAccounts" style={{ margin: 0 }}>Show All Accounts</label>
+            </span>
+             <button style={{width:'60%'}}className="search-btn" disabled={searching} onClick={handleSearch}>
               {searching ? <img src={loadingGif} alt="Loading..." style={{ width: '20px', height: '20px' }} /> : '🔍 Search'}
             </button>
+            </div>
           </div>
           <div className="input-group">
             <label>
