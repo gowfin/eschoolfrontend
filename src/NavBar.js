@@ -7,6 +7,8 @@ import BankModal from './bankModal';
 import AssetModal from './assetModal';
 import { 
     FaChartBar, 
+    FaExchangeAlt,
+    FaUserTie,
     FaRegChartBar, 
     FaUser, 
     FaFileAlt, 
@@ -15,9 +17,15 @@ import {
     FaProjectDiagram, 
     FaFileContract ,
     FaCogs, 
-    FaHistory
-  
-} from 'react-icons/fa';import ChartComponent from './Chart/chart'
+    FaHistory,
+    FaBalanceScale,
+    FaExclamationCircle,
+    FaMoneyCheckAlt,
+    FaPiggyBank,
+    FaHandHoldingUsd,
+    FaFileInvoiceDollar 
+} from 'react-icons/fa';
+import ChartComponent from './Chart/chart'
 import PieChartComponent from './Chart/incomepiechart'
 
 
@@ -270,11 +278,14 @@ const handleExModalClose = () => {
                     <li style={navItemStyle}><FaChartBar /> <Link to="/">Dashboard</Link></li>
                     <li style={navItemStyle} onClick={toggleReportdown}><FaFileAlt /> <Link to="/report">Report</Link></li>
                     <ul style={{ display: isReportdownOpen ? 'block' : 'none', paddingLeft: '20px' }}>
-                        <li style={navItemStyle}><Link to="/report"><FaCogs/>Staff Perfirmance Report</Link></li>
-                        <li style={navItemStyle}><Link to="/report2"><FaHistory/>Transaction report</Link></li>
-                        <li style={navItemStyle}><Link to="/disbursement_rpt"><FaHistory/>Disbursement report</Link></li>
-                        <li style={navItemStyle}><Link to="/fieldprintreport"><FaCogs/>FieldPrint</Link></li>                    </ul>
-                    <li style={navItemStyle}><FaUser /> <Link to="/account">Account</Link></li>
+                        <li style={navItemStyle}><Link to="/report"><FaUserTie color='blue'/>Staff Perfirmance Report</Link></li>
+                        <li style={navItemStyle}><Link to="/report2"><FaExchangeAlt color='green'/>Transaction report</Link></li>
+                        <li style={navItemStyle}><Link to="/disbursement_rpt"><FaHandHoldingUsd color='brown'/>Disbursement report</Link></li>
+                        <li style={navItemStyle}><Link to="/fieldprintreport"><FaFileInvoiceDollar color='gray'/>FieldPrint</Link></li>  
+                        <li style={navItemStyle}><Link to="/trialbalance"><FaBalanceScale color='orange'/>TrialBalance</Link></li> 
+                        <li style={navItemStyle}><Link to="/balance_report"><FaMoneyCheckAlt color='green'/><FaPiggyBank/>Balance report</Link></li> 
+                        <li style={navItemStyle}><Link to="/overdue"><FaExclamationCircle color='red'/>Overdue</Link></li>                   </ul>
+                    <li style={navItemStyle}><FaUser color='pink'/> <Link to="/account">Account</Link></li>
                     <li style={navItemStyle}><FaClipboardList /> <Link to="/bulk">Bulk Posting</Link></li>
                     <li style={navItemStyle}><FaClipboardList /> <Link to="/group">Group Posting</Link></li>
                     <li style={navItemStyle}><FaUser /> <Link to="/client">Client</Link></li>
