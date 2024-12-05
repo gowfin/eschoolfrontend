@@ -165,7 +165,7 @@ const handleExModalClose = () => {
 };
 
     return (
-<div style={{ display: 'flex', backgroundColor: 'lemonchiffon', height: '100vh' }}>
+<div style={{ display: 'flex', backgroundColor: 'lemonchiffon', height: '100%' }}>
             <div style={{
                 width: '200px', 
                 padding: '20px', 
