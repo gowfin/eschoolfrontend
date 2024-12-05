@@ -101,7 +101,7 @@ const Report = ({ state, setState }) => {
     setLoading(true);
     const fetchTransactions = async () => {
       try {
-        const response = await axios.post(`${localhost}/get_staffreport`);
+        const response = await axios.post(`${localhost}/get_staffreport`,{sesdate});
         setData(response.data);
         setLoading(false);
       } catch (err) {
@@ -122,7 +122,7 @@ const Report = ({ state, setState }) => {
         <div style={{ color: 'red' }}>{error.replace('mssql-70716-0.cloudclusters.net','Database server')}</div>
       ) : (
         <>
-          <h1 style={{ color: "Gray", textAlign: 'center' }}>Staff Performance Report</h1>
+          <h1 style={{ color: "Gray", textAlign: 'center' }}>Staff Performance Report  <span style={{fontSize:'1rem'}}><weak>As At {sesdate.slice(0,10)}</weak></span></h1>
           <table className="report-table">
             <thead>
               <tr style={{ color: "grey", fontWeight: "bold", backgroundColor: "#f0f0f0" }}>

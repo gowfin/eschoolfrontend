@@ -2,14 +2,14 @@
           export const getLocalhost = (companyName) => {
                if (!companyName) {return "https://gowfinbackend.onrender.com";}
                else if (companyName.toUpperCase() === 'BLESSED') {
-                    //   return 'http://localhost:3005';  
+                    //    return 'http://localhost:3005';  
                   return 'https://gowfinblessedbackend.vercel.app';
                
                    
                }
                else if (companyName.toUpperCase() === 'MACMAY') {
-                            // return 'http://localhost:3005';
-                      return 'https://gowfinbackend.onrender.com';
+                            return 'http://localhost:3005';
+                      //return 'https://gowfinbackend.onrender.com';
             }
                else if (companyName.toUpperCase() === '2HAPI') {
                     return 'https://gowfin2hapibackend.vercel.app';
