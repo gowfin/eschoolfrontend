@@ -100,11 +100,11 @@ const DailyCashBook = ({state}) => {
 
   const qCashbal = [
     {
-      CoaNbr: "11102-002",
-      CoaName: "Petty cash",
-      Openning: -1084065,
-      Credit: 11546650,
-      Debit: 11659400,
+      CoaNbr: "",
+      CoaName: "",
+      Openning: 0,
+      Credit: 0,
+      Debit: 0,
     },
   ];
 
@@ -165,14 +165,14 @@ const DailyCashBook = ({state}) => {
       totalReceipt,
       totalPayment,
       details: [
-        { label: "Repayment", value: repayment },
-        { label: "Deposit", value: deposit },
-        { label: "Income", value: income },
-        { label: "Bank Withdrawal", value: bankWithdrawal },
-        { label: "Disbursement", value: disbursement },
-        { label: "Savings Withdrawn", value: savingsWithdrawn },
-        { label: "Expenses", value: expenses },
-        { label: "Bank Deposit", value: bankDeposit },
+        { label: "R-Repayment", value: repayment },
+        { label: "R-Deposit", value: deposit },
+        { label: "R-Income", value: income },
+        { label: "R-Bank Withdrawal", value: bankWithdrawal },
+        { label: "P-Disbursement", value: disbursement },
+        { label: "P-Savings Withdrawn", value: savingsWithdrawn },
+        { label: "P-Expenses", value: expenses },
+        { label: "P-Bank Deposit", value: bankDeposit },
       ],
     });
   }, [report]);
@@ -226,37 +226,44 @@ return (
       </div>
       <button onClick={fetchReport}>Generate Report</button>
 
-    <table border="1" width="100%">
+    <table border="2" width="100%">
       <thead>
-        <tr>
+        <tr >
           <th>Transaction Type</th>
-          <th>Amount</th>
+          <th>Receipt</th>
+          <th>Payment</th>
         </tr>
       </thead>
       <tbody>
+          <tr>
+          <td colSpan="3"  style={{
+    textAlign: 'center', 
+    padding: '10px', 
+    fontWeight: 'bold',
+    fontSize: '1.5rem',
+  }}><span>Previous Cash in Hand</span> <span style={{color:cashData.prevCash<0?'red':'green',fontWeight:'bold',fontSize:'1.5rem',textAlign:'right'}}>{cashData.prevCash.toLocaleString(undefined, { style: "currency", currency: "NGN" })}</span></td>
+        </tr>
         {cashData.details.map((detail, index) => (
           <tr key={index}>
-            <td>{detail.label}</td>
-            <td>{detail.value.toLocaleString(undefined, { style: "currency", currency: "NGN" })}</td>
+            <td>{detail.label.slice(2)}</td>
+            <td style={{color:'green', fontWeight:'bold',border:detail.label.slice(0,2)==='R-' && '2px solid black'}}>{detail.label.slice(0,2)==='R-'?detail.value.toLocaleString(undefined, { style: "currency", currency: "NGN" }):''}</td>
+            <td style={{color:'red', fontWeight:'bold',border:detail.label.slice(0,2)==='P-'&& '2px solid black'}}>{detail.label.slice(0,2)==='P-'?detail.value.toLocaleString(undefined, { style: "currency", currency: "NGN" }):''}</td>
           </tr>
         ))}
       </tbody>
       <tfoot>
         <tr>
-          <td>Total Receipt</td>
-          <td>{cashData.totalReceipt.toLocaleString(undefined, { style: "currency", currency: "NGN" })}</td>
+          <td>Total (Receipt | Payment)</td>
+         <td style={{color:'green', fontWeight:'bold'}}> {cashData.totalReceipt.toLocaleString(undefined, { style: "currency", currency: "NGN" })}</td>
+           <td style={{color:'red', fontWeight:'bold'}}>{cashData.totalPayment.toLocaleString(undefined, { style: "currency", currency: "NGN" })}</td>
         </tr>
         <tr>
-          <td>Total Payment</td>
-          <td>{cashData.totalPayment.toLocaleString(undefined, { style: "currency", currency: "NGN" })}</td>
-        </tr>
-        <tr>
-          <td>Previous Cash in Hand</td>
-          <td>{cashData.prevCash.toLocaleString(undefined, { style: "currency", currency: "NGN" })}</td>
-        </tr>
-        <tr>
-          <td>Current Cash in Hand</td>
-          <td>{(cashData.totalReceipt - cashData.totalPayment + cashData.prevCash).toLocaleString(undefined, { style: "currency", currency: "NGN" })}</td>
+          <td colSpan='3' style={{
+    textAlign: 'center', 
+    padding: '10px', 
+    fontWeight: 'bold',
+    fontSize: '1.5rem',
+  }}><span>Current Cash in Hand</span> <span style={{color:cashData.prevCash<0?'red':'green',fontWeight:'bold',fontSize:'1.5rem',textAlign:'right'}}> { (cashData.totalReceipt - cashData.totalPayment + cashData.prevCash).toLocaleString(undefined, { style: "currency", currency: "NGN" })}</span></td>
         </tr>
       </tfoot>
     </table>

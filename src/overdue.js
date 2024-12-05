@@ -36,7 +36,7 @@ const LoanOverdue = ({state,setState}) => {
     })
     return (
         <div>
-            <h1>Loan Overdue Report</h1>
+            <h1>{companyname.charAt(0).toUpperCase()+companyname.slice(1).toLowerCase()} Loan Overdue Report</h1>
             <div>
                 <label>
                     Selected Date:

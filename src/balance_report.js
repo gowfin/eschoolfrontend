@@ -37,7 +37,7 @@ const BalanceTable = ({state,setState}) => {
 
     return (
         <div>
-            <h2>{companyname} Balances</h2>
+            <h2>{companyname.charAt(0).toUpperCase()+companyname.slice(1).toLowerCase()} Balances</h2>
             <table border="1" style={{ width: '100%', textAlign: 'left', marginTop: '20px' }}>
                 <thead>
                     <tr>

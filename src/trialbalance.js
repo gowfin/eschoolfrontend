@@ -40,7 +40,7 @@ const TrialBalance = ({ state, setState }) => {
 
     return (
         <div>
-            <h1>{companyname} Trial Balance Report</h1>
+            <h1>{companyname.charAt(0).toUpperCase()+companyname.slice(1).toLowerCase()} Trial Balance Report</h1>
             <div>
                 <label>
                     Selected Date:
