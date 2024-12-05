@@ -17,7 +17,9 @@ import Group from './group';
 import DisbursementDetail from './disbursement_rpt';
 import TrialBalance from './trialbalance';
 import Overdue from './overdue';
-import BalanceReport from './balance_report'
+import BalanceReport from './balance_report';
+import CashBook from './cashbook';
+
 
 const App = () => {
   const [state, setState] = useState(() => {
@@ -72,6 +74,7 @@ const App = () => {
             ) : (
               <>
                 <Route path="/" element={<Dashboard state={state} setState={setState} />} />
+                <Route path="/cashbook" element={<CashBook state={state} setState={setState} />} />
                 <Route path="/report" element={<Report state={state} setState={setState} />} />
                 <Route path="/report2" element={<Report2 state={state} setState={setState} />} />
                 <Route path="/disbursement_rpt" element={< DisbursementDetail state={state} setState={setState} />} />

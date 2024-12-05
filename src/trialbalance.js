@@ -84,7 +84,7 @@ const TrialBalance = ({ state, setState }) => {
                             <th>Opening</th>
                             <th>Credit</th>
                             <th>Debit</th>
-                            <th>YTD</th>
+                            <th>Closing</th>
                         </tr>
                     </thead>
                     <tbody>
