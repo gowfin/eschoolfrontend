@@ -107,25 +107,6 @@ useEffect(() => {
   setStartDate(today);
   setEndDate(today);
 }, []);
-// useEffect(() => {
-//   const fetchTransactions = async () => {
-//     setLoading(true);
-//     try {
-//       const response = await axios.get(`http://localhost/transactionreports`, {
-//         params: { startDate, endDate, branch } // Send parameters here
-//       });
-//       setData(response.data);
-//     } catch (err) {
-//       setError(err.response ? err.response.data.err : 'An error occurred');
-//       console.error('Error fetching transactions:', err);
-//     } finally {
-//       setLoading(false);
-//     }
-//   };
-
-//   fetchTransactions();
-// }, [startDate, endDate]); 
-
 
 //////////////////////handle Display
 const fetchTransactions = async () => {

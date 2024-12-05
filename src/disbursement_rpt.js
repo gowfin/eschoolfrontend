@@ -12,6 +12,20 @@ function DisbursementReport({state,setState} ) {
   
 //   alert(FormatDate(new Date()));
 
+// Calculate totals
+const totals =report && report.reduce(
+  (acc, item) => {
+    acc.totalAmount += item.Amount || 0;
+    acc.totalPrincipalAndInterest += (item.Amount * item.InterestPercent) || 0;
+    acc.totalInterest += ((item.Amount * item.InterestPercent) - item.Amount) || 0;
+    return acc;
+  },
+  {
+    totalAmount: 0,
+    totalPrincipalAndInterest: 0,
+    totalInterest: 0,
+  }
+);
   const generateReport = async () => {
     const {localhost,branch}= state ;
     setSearching(true);
@@ -33,7 +47,10 @@ function DisbursementReport({state,setState} ) {
       setSearching(false);
     }
   };
- 
+  const formatter = new Intl.NumberFormat('en-US', {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+});
 
   const exportToPDF = () => {
     const doc = new jsPDF();
@@ -65,12 +82,20 @@ function DisbursementReport({state,setState} ) {
                   <td>{item.CustNo}</td>
                   <td>{item.name}</td>
                   <td>{item.GroupID || 'N/A'}</td>
-                  <td>{item.Amount}</td>
-                  <td>{(item.Amount*item.InterestPercent).toFixed(2)}</td>
+                  <td>{ formatter.format(item.Amount)}</td>
+                  <td>{formatter.format((item.Amount*item.InterestPercent).toFixed(2))}</td>
                   <td>{item.loanproduct}</td>
-                  <td>{(item.Amount*item.InterestPercent).toFixed(2)-item.Amount}</td>
+                  <td>{formatter.format((item.Amount*item.InterestPercent).toFixed(2)-item.Amount)}</td>
                 </tr>
               ))}
+              {/* Footer row for totals */}
+            <tr style={{ fontWeight: 'bold' }}>
+              <td colSpan="4" align="right">Totals:</td>
+              <td>{formatter.format(totals.totalAmount.toFixed(2))}</td>
+              <td>{formatter.format(totals.totalPrincipalAndInterest.toFixed(2))}</td>
+              <td></td>
+              <td>{formatter.format(totals.totalInterest.toFixed(2))}</td>
+            </tr>
             </tbody>
           </table>
         ) : (
