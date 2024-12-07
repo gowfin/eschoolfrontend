@@ -19,6 +19,14 @@ import TrialBalance from './trialbalance';
 import Overdue from './overdue';
 import BalanceReport from './balance_report';
 import CashBook from './cashbook';
+////
+import GLStatement from './GLStatement';
+import GroupMgt from './groupmgt';
+import IorEReport from './incomeorexpense';
+
+
+
+
 
 
 const App = () => {
@@ -81,6 +89,7 @@ const App = () => {
                 <Route path="/balance_report" element={< BalanceReport state={state} setState={setState} />} />
                 <Route path="/overdue" element={< Overdue state={state} setState={setState} />} />
                 <Route path="/trialbalance" element={< TrialBalance state={state} setState={setState} />} />
+                <Route path="/incomeorexpense" element={<IorEReport state={state} setState={setState} />} />
                 <Route path="/fieldprintreport" element={<FieldPrint state={state} setState={setState} />} />
                 <Route path="/account" element={<Account state={state} setState={setState} />} />
                 <Route path="/client" element={<Client state={state} setState={setState} />} />
@@ -89,8 +98,9 @@ const App = () => {
                 <Route path="/admin/managesession" element={<ManageSession  state={state} setState={setState}/>} />
                 <Route path="/bulk" element={<Bulk state={state}/>} />
                 <Route path="/group" element={<Group state={state}/>} />
+                <Route path="/groupmgt" element={<GroupMgt state={state}/>} />
+                <Route path="/GLStatement" element={<GLStatement state={state}/>} />
                 <Route path="/workflow/single" element={<Single state={state} modalIsOpen={true} setModalIsOpen={setModalIsOpen}/>} />
-
               </>
             )}     
           </Routes>

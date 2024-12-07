@@ -8,7 +8,7 @@
                    
                }
                else if (companyName.toUpperCase() === 'MACMAY') {
-                      //      return 'http://localhost:3005';
+                            return 'http://localhost:3005';
                       return 'https://gowfinbackend.onrender.com';
             }
                else if (companyName.toUpperCase() === '2HAPI') {
@@ -18,6 +18,7 @@
                     return 'https://gowfinreliablebackend.vercel.app';
                 }
                 else if (companyName.toUpperCase() === 'BRIGHTSTAR') {
+                            // return 'http://localhost:3005';
                     return 'https://gowfinbrightstarbackend.vercel.app';
                 }
                 else if (companyName.toUpperCase() === 'IVYESSENTIAL') {

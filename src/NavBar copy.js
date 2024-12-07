@@ -32,7 +32,6 @@ import {
 } from 'react-icons/fa';
 import ChartComponent from './Chart/chart'
 import PieChartComponent from './Chart/incomepiechart'
-import GLStatement from './GLStatementModal';
 
 
 const NavBar = ({ setLoggedIn,state,setIsNavbarShowing }) => {
@@ -53,8 +52,7 @@ const NavBar = ({ setLoggedIn,state,setIsNavbarShowing }) => {
     const [bankList,setBankList]=useState([]);
     const [assetList,setAssetList]=useState([]);
      // State to manage the hover effect
-
-const [hoveredItem, setHoveredItem] = useState(null); 
+     const [hovered, setHovered] = useState(false);
     
 //HIDE SESSION MGT AND WORKFLOW FOR NON-APPROVING OFFICERS
     const displayadminroles=userrole==='Administrator'||userrole==='Manager';
@@ -165,14 +163,14 @@ const handleAsset = async() => {
   }
   
 };
-const handleGLStatement = async() => {
+const handleGLstatement = async() => {
   handleExModalClose();
   setIsGLOpen(true);
 
   
-  if(incomeList.length===0){
-    const response = await axios.post(`${localhost}/getglincome`,{branch})
-    setIncomeList(response.data);
+  if(assetList.length===0){
+    const response = await axios.post(`${localhost}/getglasset`,{branch})
+    setAssetList(response.data);
     
   }
   
@@ -240,15 +238,7 @@ const handleExModalClose = () => {
         userid={userid}
         onSelectAsset={assetList}
         localhost={localhost}
-      />}  
-      {incomeList.length!==0 && isGLOpen && <GLStatement
-        isOpen={isGLOpen}
-        onClose={handleExModalClose}
-        incomeList={incomeList}
-        userid={userid}
-        onSelectAsset={incomeList}
-        localhost={localhost}
-      />} 
+      />}   
                  <div style={{
         position: "absolute",
         top: position.y,
@@ -300,42 +290,42 @@ const handleExModalClose = () => {
                 <button style={{borderRadius:'50%',backgroundColor:'#FF6666'}} onClick={handleExpense}>{isExOpen===false?'Expense':"Running..."}</button>
                 <button style={{borderRadius:'50%'}}onClick={handleBank}>{isBnkOpen===false?'Bank':"Running..."}</button>
                 <button style={{borderRadius:'50%'}}onClick={handleAsset}>{isAstOpen===false?'Asset':"Running..."}</button>
-                <button style={{borderRadius:'50%'}}onClick={handleGLStatement}>{isGLOpen===false?'GL Statement':"Running..."}</button>
+                <button style={{borderRadius:'50%'}}onClick={handleGLstatement}>{isGLOpen===false?'GL Statement':"Running..."}</button>
               
                 </div>
                    )}
                 </div>            
                 <h3>Navigation</h3>
                 <ul style={{ listStyleType: 'none', padding: 0 }} >
-                    <li style={{...navItemStyle, ...( hoveredItem === "Dashboard" ? navItemHoverStyle : {})}}  onMouseEnter={() => setHoveredItem('Dashboard')}  onMouseLeave={() => setHoveredItem(null)}
+                    <li style={{...navItemStyle, ...( hovered ? navItemHoverStyle : {})}}  onMouseEnter={() => setHovered(true)}  onMouseLeave={() => setHovered(false)}
                ><FaChartBar /> <Link to="/">Dashboard</Link></li>
-                    <li style={{...navItemStyle, ...( hoveredItem === "report" ? navItemHoverStyle : {})}}  onMouseEnter={() => setHoveredItem('report')}  onMouseLeave={() => setHoveredItem(null)} onClick={toggleReportdown}><FaFileAlt /> <Link to="/report">Report</Link></li>
+                    <li style={navItemStyle} onClick={toggleReportdown}><FaFileAlt /> <Link to="/report">Report</Link></li>
                     <ul style={{ display: isReportdownOpen ? 'block' : 'none', paddingLeft: '20px' }}>
-                    <li style={{...navItemStyle, ...( hoveredItem === "cashbook" ? navItemHoverStyle : {})}}  onMouseEnter={() => setHoveredItem('cashbook')}  onMouseLeave={() => setHoveredItem(null)}><Link to="/cashbook"><FaBook color='#4CAF50'/> Daily Cash Book Analysis</Link></li>
-                        <li style={{...navItemStyle, ...( hoveredItem === "report1" ? navItemHoverStyle : {})}}  onMouseEnter={() => setHoveredItem('report1')}  onMouseLeave={() => setHoveredItem(null)}><Link to="/report"><FaUserTie color='blue' />Staff Perfirmance Report</Link></li>
-                        <li style={{...navItemStyle, ...( hoveredItem === "report2" ? navItemHoverStyle : {})}}  onMouseEnter={() => setHoveredItem('report2')}  onMouseLeave={() => setHoveredItem(null)}><Link to="/report2"><FaExchangeAlt color='green'/>Transaction report</Link></li>
-                        <li style={{...navItemStyle, ...( hoveredItem === "disbursement_rpt" ? navItemHoverStyle : {})}}  onMouseEnter={() => setHoveredItem('disbursement_rpt')}  onMouseLeave={() => setHoveredItem(null)}><Link to="/disbursement_rpt"><FaHandHoldingUsd color='brown'/>Disbursement report</Link></li>
-                        <li style={{...navItemStyle, ...( hoveredItem === "fieldprintreport" ? navItemHoverStyle : {})}}  onMouseEnter={() => setHoveredItem('fieldprintreport')}  onMouseLeave={() => setHoveredItem(null)}><Link to="/fieldprintreport"><FaFileInvoiceDollar color='gray'/>FieldPrint</Link></li>  
-                        <li style={{...navItemStyle, ...( hoveredItem === "trialbalance" ? navItemHoverStyle : {})}}  onMouseEnter={() => setHoveredItem('trialbalance')}  onMouseLeave={() => setHoveredItem(null)}><Link to="/trialbalance"><FaBalanceScale color='orange'/>TrialBalance</Link></li> 
-                        <li style={{...navItemStyle, ...( hoveredItem === "incomeorexpense" ? navItemHoverStyle : {})}}  onMouseEnter={() => setHoveredItem('incomeorexpense')}  onMouseLeave={() => setHoveredItem(null)}><Link to="/incomeorexpense"><FaMoneyBillAlt color='orange'/>Income or Expense</Link></li> 
-                        <li style={{...navItemStyle, ...( hoveredItem === "balance_report" ? navItemHoverStyle : {})}}  onMouseEnter={() => setHoveredItem('balance_report')}  onMouseLeave={() => setHoveredItem(null)}><Link to="/balance_report"><FaClipboardList/>Balance report</Link></li> 
-                        <li style={{...navItemStyle, ...( hoveredItem === "overdue" ? navItemHoverStyle : {})}}  onMouseEnter={() => setHoveredItem('overdue')}  onMouseLeave={() => setHoveredItem(null)}><Link to="/overdue"><FaExclamationCircle color='red'/>Overdue</Link></li>                   </ul>
-                    <li style={{...navItemStyle, ...( hoveredItem === "account" ? navItemHoverStyle : {})}}  onMouseEnter={() => setHoveredItem('account')}  onMouseLeave={() => setHoveredItem(null)}><FaMoneyCheckAlt color='green'/> <Link to="/account">Account</Link></li>
-                    <li style={{...navItemStyle, ...( hoveredItem === "bulk" ? navItemHoverStyle : {})}}  onMouseEnter={() => setHoveredItem('bulk')}  onMouseLeave={() => setHoveredItem(null)}><FaClipboardList /> <Link to="/bulk">Bulk Posting</Link></li>
-                    <li style={{...navItemStyle, ...( hoveredItem === "group" ? navItemHoverStyle : {})}}  onMouseEnter={() => setHoveredItem('group')}  onMouseLeave={() => setHoveredItem(null)}><FaUsers color="blue"/> <Link to="/group">Group Posting</Link></li>
-                    <li style={{...navItemStyle, ...( hoveredItem === "groupmgt" ? navItemHoverStyle : {})}}  onMouseEnter={() => setHoveredItem('groupmgt')}  onMouseLeave={() => setHoveredItem(null)}><FaUserFriends  color="green"/> <Link to="/groupmgt">Group Management</Link></li>
-                    <li style={{...navItemStyle, ...( hoveredItem === "client" ? navItemHoverStyle : {})}}  onMouseEnter={() => setHoveredItem('client')}  onMouseLeave={() => setHoveredItem(null)}><FaUserPlus /> <Link to="/client">Client</Link></li>
-                    <li style={{...navItemStyle, ...( hoveredItem === "GLStatement" ? navItemHoverStyle : {})}}  onMouseEnter={() => setHoveredItem('GLStatement')}  onMouseLeave={() => setHoveredItem(null)}><FaRegChartBar /> <Link to="/GLStatement">GL Statement</Link></li>
-                    <li style={{...navItemStyle, ...( hoveredItem === "dispchart" ? navItemHoverStyle : {})}}  onMouseEnter={() => setHoveredItem('dispchart')}  onMouseLeave={() => setHoveredItem(null)}><FaRegChartBar /> <Link to="/dispchart">Chart</Link></li>
-                    <li style={{...navItemStyle, ...( hoveredItem === "workflow" ? navItemHoverStyle : {})}}  onMouseEnter={() => setHoveredItem('workflow')}  onMouseLeave={() => setHoveredItem(null)} onClick={toggleDropdown}>
+                    <li style={navItemStyle}><Link to="/cashbook"><FaBook color='#4CAF50'/> Daily Cash Book Analysis</Link></li>
+                        <li style={navItemStyle}><Link to="/report"><FaUserTie color='blue' />Staff Perfirmance Report</Link></li>
+                        <li style={navItemStyle}><Link to="/report2"><FaExchangeAlt color='green'/>Transaction report</Link></li>
+                        <li style={navItemStyle}><Link to="/disbursement_rpt"><FaHandHoldingUsd color='brown'/>Disbursement report</Link></li>
+                        <li style={navItemStyle}><Link to="/fieldprintreport"><FaFileInvoiceDollar color='gray'/>FieldPrint</Link></li>  
+                        <li style={navItemStyle}><Link to="/trialbalance"><FaBalanceScale color='orange'/>TrialBalance</Link></li> 
+                        <li style={navItemStyle}><Link to="/incomeorexpense"><FaMoneyBillAlt color='orange'/>Income or Expense</Link></li> 
+                        <li style={navItemStyle}><Link to="/balance_report"><FaClipboardList/>Balance report</Link></li> 
+                        <li style={navItemStyle}><Link to="/overdue"><FaExclamationCircle color='red'/>Overdue</Link></li>                   </ul>
+                    <li style={navItemStyle}><FaMoneyCheckAlt color='green'/> <Link to="/account">Account</Link></li>
+                    <li style={navItemStyle}><FaClipboardList /> <Link to="/bulk">Bulk Posting</Link></li>
+                    <li style={navItemStyle}><FaUsers color="blue"/> <Link to="/group">Group Posting</Link></li>
+                    <li style={navItemStyle}><FaUserFriends  color="green"/> <Link to="/groupmgt">Group Management</Link></li>
+                    <li style={navItemStyle}><FaUserPlus /> <Link to="/client">Client</Link></li>
+                    <li style={navItemStyle}><FaRegChartBar /> <Link to="/GLStatement">GL Statement</Link></li>
+                    <li style={navItemStyle}><FaRegChartBar /> <Link to="/dispchart">Chart</Link></li>
+                    <li style={navItemStyle} onClick={toggleDropdown}>
                         {displayadminroles && <span style={{ color: 'blue', textDecoration: 'underline' }}>< FaProjectDiagram/>Workflow</span>}
                         <ul style={{ display: isDropdownOpen ? 'block' : 'none', paddingLeft: '20px' }}>
-                            <li style={{...navItemStyle, ...( hoveredItem === "single" ? navItemHoverStyle : {})}}  onMouseEnter={() => setHoveredItem('single')}  onMouseLeave={() => setHoveredItem(null)}><Link to="/workflow/single">Single Transactions</Link></li>
-                            <li style={{...navItemStyle, ...( hoveredItem === "batch" ? navItemHoverStyle : {})}}  onMouseEnter={() => setHoveredItem('batch')}  onMouseLeave={() => setHoveredItem(null)}><Link to="/workflow/batch">Group/Batch/Mobile Trx</Link></li>
-                            <li style={{...navItemStyle, ...( hoveredItem === "disbursed" ? navItemHoverStyle : {})}}  onMouseEnter={() => setHoveredItem('disbursed')}  onMouseLeave={() => setHoveredItem(null)}><Link to="/workflow/disbursement">Pending Disbursement</Link></li>
+                            <li style={navItemStyle}><Link to="/workflow/single">Single Transactions</Link></li>
+                            <li style={navItemStyle}><Link to="/workflow/batch">Group/Batch/Mobile Trx</Link></li>
+                            <li style={navItemStyle}><Link to="/workflow/disbursement">Pending Disbursement</Link></li>
                         </ul>
                     </li>
-                    {displayadminroles && <li style={{...navItemStyle, ...( hoveredItem === "session" ? navItemHoverStyle : {})}}  onMouseEnter={() => setHoveredItem('session')}  onMouseLeave={() => setHoveredItem(null)}><Link to="/admin/ManageSession"><FaFileContract/>Manage Session</Link></li>}
+                    {displayadminroles && <li style={navItemStyle}><Link to="/admin/ManageSession"><FaFileContract/>Manage Session</Link></li>}
                 </ul>
                 <button onClick={handleLogout} style={{
                     marginTop: '20px',
