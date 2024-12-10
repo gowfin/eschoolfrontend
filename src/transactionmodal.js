@@ -93,10 +93,11 @@ const handleBlur = async () => {
       }
     } else{
       try {
-        const amnt = amount.replace('₦','');
+     
+        const amnt = amount.replace('₦','').replace(',','');
         const name = AccountName;
         const accountValue = transactionType === 'Withdrawal' ? -amnt : amnt;
-  
+        // alert (accountValue);
         const product = products.find(productrow => productrow.id === ProductID.slice(0, 3).trim().toUpperCase() + 'SAVGS');
         const pcode = product ? product.code : 'notfound';
        

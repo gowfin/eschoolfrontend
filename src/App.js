@@ -22,7 +22,7 @@ import CashBook from './cashbook';
 ////
 import GLStatement from './GLStatement';
 import GroupMgt from './groupmgt';
-import IorEReport from './incomeorexpense';
+import IorEReport from './reportcontrol';
 
 
 
@@ -89,7 +89,7 @@ const App = () => {
                 <Route path="/balance_report" element={< BalanceReport state={state} setState={setState} />} />
                 <Route path="/overdue" element={< Overdue state={state} setState={setState} />} />
                 <Route path="/trialbalance" element={< TrialBalance state={state} setState={setState} />} />
-                <Route path="/incomeorexpense" element={<IorEReport state={state} setState={setState} />} />
+                <Route path="/reportcontrol" element={<IorEReport state={state} setState={setState} />} />
                 <Route path="/fieldprintreport" element={<FieldPrint state={state} setState={setState} />} />
                 <Route path="/account" element={<Account state={state} setState={setState} />} />
                 <Route path="/client" element={<Client state={state} setState={setState} />} />

@@ -12,6 +12,7 @@ const Report = ({ state, setState }) => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [branchCode,setBranchCode]=useState(state.branch.slice(0,3));
   
 
   const buttonStyle = (num = 0) => ({
@@ -101,7 +102,7 @@ const Report = ({ state, setState }) => {
     setLoading(true);
     const fetchTransactions = async () => {
       try {
-        const response = await axios.post(`${localhost}/get_staffreport`,{sesdate});
+        const response = await axios.post(`${localhost}/get_staffreport`,{sesdate,branchCode});
         setData(response.data);
         setLoading(false);
       } catch (err) {
@@ -112,7 +113,7 @@ const Report = ({ state, setState }) => {
     };
 
     fetchTransactions();
-  }, []);
+  }, [branchCode]);
 
   return (
     <div className="report-container">
@@ -122,7 +123,19 @@ const Report = ({ state, setState }) => {
         <div style={{ color: 'red' }}>{error.replace('mssql-70716-0.cloudclusters.net','Database server')}</div>
       ) : (
         <>
-          <h1 style={{ color: "Gray", textAlign: 'center' }}>Staff Performance Report  <span style={{fontSize:'1rem'}}><weak>As At {sesdate.slice(0,10)}</weak></span></h1>
+          <h2 style={{ color: "Gray", textAlign: 'center' }}>Staff Performance Report  <span style={{fontSize:'1rem'}}><weak>As At {sesdate.slice(0,10)}</weak></span></h2>
+          <div style={{width:'10%'}}><label>Branch code:</label><select value={branchCode} onChange={(e)=>{setBranchCode(e.target.value)}}>
+            <option value='002'>002</option>
+            <option value='003'>003</option>
+            <option value='004'>004</option>
+            <option value='005'>005</option>
+            <option value='006'>006</option>
+            <option value='007'>007</option>
+            <option value='008'>008</option>
+            <option value='009'>009</option>
+            <option value='010'>010</option>
+            <option value='All'>All</option>
+            </select></div>
           <table className="report-table">
             <thead>
               <tr style={{ color: "grey", fontWeight: "bold", backgroundColor: "#f0f0f0" }}>

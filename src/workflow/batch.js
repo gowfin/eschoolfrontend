@@ -14,14 +14,14 @@ const BatchWorkflow = ({ state }) => {
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [loadingGrp, setLoadingGrp] = useState(false);
-  const [date, setDate] = useState(sesdate? sesdate.slice(0,10):'');
-//   const [date, setDate] = useState(() => {
-//     const today = new Date();
-//     const year = today.getFullYear();
-//     const month = String(today.getMonth() + 1).padStart(2, '0'); // Month is zero-based, so we add 1
-//     const day = String(today.getDate()).padStart(2, '0');
-//     return `${year}-${month}-${day}`;
-// });
+  // const [date, setDate] = useState(sesdate? sesdate.slice(0,10):'');
+  const [date, setDate] = useState(() => {
+    const today = new Date(sesdate.slice(0,10));
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, '0'); // Month is zero-based, so we add 1
+    const day = String(today.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+});
   const [approving, setApproving] = useState(false);
   const [rejecting, setRejecting] = useState(false);
   const [arrayRejecting, setArrayRejecting] = useState([]); // Initialize similarly

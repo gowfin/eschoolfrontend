@@ -10,14 +10,14 @@ const IndWorkflow = ({ state }) => {
   const {localhost,sesdate}= state ;
   const [loading, setLoading] = useState(false);
   const [branchCode, setBranchCode] = useState('');
-  const [date, setDate] = useState(sesdate?sesdate:'');
-//   const [date, setDate] = useState(() => {
-//     const today = new Date();
-//     const year = today.getFullYear();
-//     const month = String(today.getMonth() + 1).padStart(2, '0'); // Month is zero-based, so we add 1
-//     const day = String(today.getDate()).padStart(2, '0');
-//     return `${year}-${month}-${day}`;
-// });
+  // const [date, setDate] = useState(sesdate?sesdate:'');
+  const [date, setDate] = useState(() => {
+    const today = new Date(sesdate);
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, '0'); // Month is zero-based, so we add 1
+    const day = String(today.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+});
   const [workflowDataInd, setWorkflowDataInd] = useState([]);
   const [arrayApproving, setArrayApproving] = useState([]);
   const [arrayRejecting, setArrayRejecting] = useState([]); // Initialize similarly
