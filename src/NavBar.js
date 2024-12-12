@@ -37,7 +37,7 @@ import GLStatement from './GLStatementModal';
 
 const NavBar = ({ setLoggedIn,state,setIsNavbarShowing }) => {
     const navigate = useNavigate();
-    const { branch, logindata, groups, biztype,userid,userrole,status } = state || {};
+    const { branch, logindata, groups, biztype,userid,userrole,status,sesdate } = state || {};
     const [isDropdownOpen, setDropdownOpen] = useState(false);
     const [isReportdownOpen, setIsReportdownOpen] = useState(false);
     const {localhost,companyname}= state || 'localhost:3005'
@@ -52,6 +52,7 @@ const NavBar = ({ setLoggedIn,state,setIsNavbarShowing }) => {
     const [expenseList,setExpenseList]=useState([]);
     const [bankList,setBankList]=useState([]);
     const [assetList,setAssetList]=useState([]);
+    const [glstatement,setGlstatement]=useState(false)
      // State to manage the hover effect
 
 const [hoveredItem, setHoveredItem] = useState(null); 
@@ -123,10 +124,10 @@ useEffect(() => { // This will clear all the state and logout the user when the 
       setIsIncOpen(true);
      
       // alert(branch);
-      if(incomeList.length===0){
-        const response = await axios.post(`${localhost}/getglincome`,{branch})
+      if(incomeList.length===0 || glstatement){
+        const response = await axios.post(`${localhost}/getglincome`,{branch,glstatement:false})
         setIncomeList(response.data);
-      
+        response.data.length>0? setGlstatement(false):setGlstatement(true);
       }
       
   };
@@ -170,9 +171,10 @@ const handleGLStatement = async() => {
   setIsGLOpen(true);
 
   
-  if(incomeList.length===0){
-    const response = await axios.post(`${localhost}/getglincome`,{branch})
+  if(incomeList.length===0 || !glstatement){
+    const response = await axios.post(`${localhost}/getglincome`,{branch,glstatement:true})
     setIncomeList(response.data);
+    response.data.length>0? setGlstatement(true):setGlstatement(false);
     
   }
   
@@ -248,6 +250,7 @@ const handleExModalClose = () => {
         userid={userid}
         onSelectAsset={incomeList}
         localhost={localhost}
+        sesdate={sesdate}
       />} 
                  <div style={{
         position: "absolute",
@@ -298,9 +301,9 @@ const handleExModalClose = () => {
                 }}
               > <button hidden={isIncOpen} style={{borderRadius:'50%'}}onClick={handleIncome}>{isIncOpen===false?'Income':"Running..."}</button>
                 <button style={{borderRadius:'50%',backgroundColor:'#FF6666'}} onClick={handleExpense}>{isExOpen===false?'Expense':"Running..."}</button>
-                <button style={{borderRadius:'50%'}}onClick={handleBank}>{isBnkOpen===false?'Bank':"Running..."}</button>
-                <button style={{borderRadius:'50%'}}onClick={handleAsset}>{isAstOpen===false?'Asset':"Running..."}</button>
-                <button style={{borderRadius:'50%'}}onClick={handleGLStatement}>{isGLOpen===false?'GL Statement':"Running..."}</button>
+                <button style={{borderRadius:'50%',backgroundColor:'#AF6666'}}onClick={handleBank}>{isBnkOpen===false?'Bank':"Running..."}</button>
+                <button style={{borderRadius:'50%',backgroundColor:'#BB6666'}}onClick={handleAsset}>{isAstOpen===false?'Asset':"Running..."}</button>
+                <button style={{borderRadius:'50%',backgroundColor:'#CD222D'}}onClick={handleGLStatement}>{isGLOpen===false?'GL Statement':"Running..."}</button>
               
                 </div>
                    )}

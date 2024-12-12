@@ -25,8 +25,8 @@ const AssetModal = ({ isOpen, onClose,localhost, assetList,userid, onSelectAsset
     const glCode=e.target.value;
     setSelectedAsset(glCode); // Set selected expense
     setCode(glCode.slice(0,5));
-    setBrcode('00'+glCode.slice(6,7));
-    setDescription(tranxType+' of '+glCode.slice(8))
+    setBrcode(glCode.slice(6,9));
+    setDescription(tranxType+' of '+glCode.slice(10))
     
   };
   const handleExModalClose = () => {

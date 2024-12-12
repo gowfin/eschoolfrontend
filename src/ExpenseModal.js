@@ -18,8 +18,10 @@ const ExpenseModal = ({ isOpen, onClose,localhost, expenseList,userid, onSelectE
     const glCode=e.target.value;
     setSelectedExpense(glCode); // Set selected expense
     setCode(glCode.slice(0,5));
-    setBrcode('00'+glCode.slice(6,7));
-    setDescription(glCode.slice(8))
+    setBrcode(glCode.slice(6,9));
+    setDescription(glCode.slice(10))
+   
+    
    
   };
   const handleExModalClose = () => {

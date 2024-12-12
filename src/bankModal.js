@@ -24,8 +24,8 @@ const BankModal = ({ isOpen, onClose, bankList,localhost,userid }) => {
     const glCode=e.target.value;
     setSelectedIncome(glCode); // Set selected expense
     setCode(glCode.slice(0,5));
-    setBrcode('00'+glCode.slice(6,7));
-    const desc=tranxType==='Deposit'? 'Deposit to '+glCode.slice(8):'Withdr From '+glCode.slice(8);
+    setBrcode(glCode.slice(6,9));
+    const desc=tranxType==='Deposit'? 'Deposit to '+glCode.slice(10):'Withdr From '+glCode.slice(10);
     setDescription(desc)
    
     

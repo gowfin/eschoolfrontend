@@ -1,5 +1,5 @@
 import React, { useState,useEffect } from "react";
-import { Link, useNavigate } from 'react-router-dom';
+import {  useNavigate } from 'react-router-dom';
 import axios from "axios";
 import './client.css'
 import loadingGif from './loading.gif'; // Your loading gif file
@@ -567,15 +567,7 @@ const getIDFormat=( num )=>{
         
 
         {/*---------------------------------------------*/}
-      {/* <label>
-        Branch Code:
-        <input
-          type="text"
-          name="branchCode"
-          value={formData.branchCode}
-          onChange={handleChange}
-        />
-      </label> */}
+     
 
       <label>
         BVN:

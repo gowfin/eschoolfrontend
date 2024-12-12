@@ -88,7 +88,7 @@ const handlechange=(e)=>{
           onChange={(e) => setFromDate(e.target.value)}
         />
       </div>
-      {isIncome || isNewClient&&<div>
+      {!isIncomeexp &&<div>
         <label>To Date:</label>
         <input
           type="date"

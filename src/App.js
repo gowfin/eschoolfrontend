@@ -19,8 +19,6 @@ import TrialBalance from './trialbalance';
 import Overdue from './overdue';
 import BalanceReport from './balance_report';
 import CashBook from './cashbook';
-////
-import GLStatement from './GLStatement';
 import GroupMgt from './groupmgt';
 import IorEReport from './reportcontrol';
 
@@ -99,7 +97,6 @@ const App = () => {
                 <Route path="/bulk" element={<Bulk state={state}/>} />
                 <Route path="/group" element={<Group state={state}/>} />
                 <Route path="/groupmgt" element={<GroupMgt state={state}/>} />
-                <Route path="/GLStatement" element={<GLStatement state={state}/>} />
                 <Route path="/workflow/single" element={<Single state={state} modalIsOpen={true} setModalIsOpen={setModalIsOpen}/>} />
               </>
             )}     

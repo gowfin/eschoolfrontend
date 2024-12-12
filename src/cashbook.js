@@ -1,95 +1,23 @@
-
-//   return (
-//     <div>
-//         {/* {loading && <p>Loading...</p>} */}
-//         {error && <p style={{ color: 'red' }}>{error}</p>}
-//       <h1>Daily Cash Book Report</h1>
-      // <div>
-      //   <label>
-      //     Branch Code:
-      //     <input
-      //       type="text"
-      //       value={branchCode}
-      //       onChange={(e) => setBranchCode(e.target.value)}
-      //     />
-      //   </label>
-      // </div>
-      // <div>
-      //   <label>
-      //     Date:
-      //     <input
-      //       type="date"
-      //       value={selectedDate}
-      //       onChange={(e) => setSelectedDate(e.target.value)}
-      //     />
-      //   </label>
-      // </div>
-      // <button onClick={fetchReport}>Generate Report</button>
-
-//       {report && (
-//         <div>
-//           <h2>Cash Balance</h2>
-//           <table>
-//             <thead>
-//               <tr>
-//                 <th>CoaNbr</th>
-//                 <th>CoaName</th>
-//                 <th>Openning</th>
-//                 <th>Credit</th>
-//                 <th>Debit</th>
-//               </tr>
-//             </thead>
-//             <tbody>
-//               {report.cashBalance.map((item, index) => (
-//                 <tr key={index}>
-//                   <td>{item.CoaNbr}</td>
-//                   <td>{item.CoaName}</td>
-//                   <td>{item.Openning}</td>
-//                   <td>{item.Credit}</td>
-//                   <td>{item.Debit}</td>
-//                 </tr>
-//               ))}
-//             </tbody>
-//           </table>
-
-//           <h2>Transactions</h2>
-//           <table>
-//             <thead>
-//               <tr>
-//                 <th>TranID</th>
-//                 <th>ProductID</th>
-//                 <th>CreditGL</th>
-//                 <th>DebitGL</th>
-//                 <th>Amount</th>
-//               </tr>
-//             </thead>
-//             <tbody>
-//               {report.transactions.map((item, index) => (
-//                 <tr key={index}>
-//                   <td>{item.TranID}</td>
-//                   <td>{item.productid}</td>
-//                   <td>{item.CreditGL}</td>
-//                   <td>{item.DebitGL}</td>
-//                   <td>{item.Amount}</td>
-//                 </tr>
-//               ))}
-//             </tbody>
-//           </table>
-//         </div>
-//       )}
-//     </div>
-//   );
-// };
 import React, { useState,useEffect } from 'react';
 import axios from 'axios';
+import CashBookDetail from './cashbookdetailmodal'
+import loadingGif from './loading.gif'
+
+
+
+
 
 const DailyCashBook = ({state}) => {
   const [selectedDate, setSelectedDate] = useState(state.sesdate.slice(0,10));
   const [branchCode, setBranchCode] = useState(state.branch.slice(0,3));
   const [report, setReport] = useState(null);
+  const [reportDetail, setReportDetail] = useState(null);
   const {localhost,branch}=state;
   const [loading, setLoading] = useState(false);
+  const [loadingDetail, setLoadingDetail] = useState([]);
   const [error, setError] = useState('');
+  const [modalIsOpen,setModalIsOpen]=useState(false);
+  const [type,setType]=useState('');
   const [cashData, setCashData] = useState({
     cashBalance: 0,
     prevCash: 0,
@@ -107,6 +35,7 @@ const DailyCashBook = ({state}) => {
       Debit: 0,
     },
   ];
+
 
 
   useEffect(() => {
@@ -165,14 +94,14 @@ const DailyCashBook = ({state}) => {
       totalReceipt,
       totalPayment,
       details: [
-        { label: "R-Repayment", value: repayment },
-        { label: "R-Deposit", value: deposit },
-        { label: "R-Income", value: income },
-        { label: "R-Bank Withdrawal", value: bankWithdrawal },
-        { label: "P-Disbursement", value: disbursement },
-        { label: "P-Savings Withdrawn", value: savingsWithdrawn },
-        { label: "P-Expenses", value: expenses },
-        { label: "P-Bank Deposit", value: bankDeposit },
+        { label: "001R-Repayment", value: repayment },
+        { label: "002R-Deposit", value: deposit },
+        { label: "020R-Income", value: income },
+        { label: "020R-Bank Withdrawal", value: bankWithdrawal },
+        { label: "010P-Disbursement", value: disbursement },
+        { label: "005P-Savings Withdrawn", value: savingsWithdrawn },
+        { label: "020P-Expenses", value: expenses },
+        { label: "020P-Bank Deposit", value: bankDeposit },
       ],
     });
   }, [report]);
@@ -187,20 +116,63 @@ const DailyCashBook = ({state}) => {
       });
       console.log(response.data);
       setReport(response.data);
+      //fill the loadingDetail status with false
+      setLoadingDetail(new Array(cashData.details.length).fill(false));
     } catch (error) {
       setError('Failed to fetch data');
       alert('Failed to fetch report.');
     }finally{setLoading(false);}
   };
 
-
+  const handleDetial = async (tranid,trxtype,index) => {
+    try {
+      setLoadingDetail((prev) => {
+        const newLoading = [...prev];
+        newLoading[index] = true; // Set loading for the specific index
+        return newLoading;
+      });
+      setType(trxtype);
+      setError('');
+     
+      const itemQuery=tranid==='020' && trxtype==='Income'?`select CustNo,AccountID,BranchID,StmtRef,Amount,isnull(productid,'GL') productid from transactn where valuedate='${selectedDate}' and tranid like '%${tranid}' and CreditGl like'3%' and DebitGL like'11102%' and left(CustNo,3)='${branchCode}'`:
+      tranid==='020' && trxtype==='Expenses'? `select CustNo,AccountID,BranchID,StmtRef,Amount,isnull(productid,'GL') productid from transactn where valuedate='${selectedDate}' and tranid like '%${tranid}' and (DebitGl like'4%' or  DebitGl like'5%') and CreditGl like'11102%' and left(CustNo,3)='${branchCode}'`:
+      tranid==='020' && trxtype==='Bank Withdrawal'?`select CustNo,AccountID,BranchID,StmtRef,Amount,isnull(productid,'GL') productid from transactn where valuedate='${selectedDate}' and tranid like '%${tranid}' and CreditGl like'11%' and DebitGL like'11102%' and left(CustNo,3)='${branchCode}'`:
+      tranid==='020' && trxtype==='Bank Deposit'? `select CustNo,AccountID,BranchID,StmtRef,Amount,isnull(productid,'GL') productid from transactn where valuedate='${selectedDate}' and tranid like '%${tranid}' and DebitGl like'11%' and CreditGl like'11102%' and left(CustNo,3)='${branchCode}'`:
+      `select CustNo,AccountID,BranchID,StmtRef,Amount,isnull( productid,'GL') productid from transactn where valuedate='${selectedDate}' and tranid like '%${tranid}' and left(CustNo,3)='${branchCode}'`
+      
+      ;
+      const response = await axios.post(`${localhost}/cashbookitemdetails`, {
+        itemQuery,
+        tranid,
+        startDate:selectedDate
+      });
+      // console.log(response.data);
+      setReportDetail(response.data);
+      setModalIsOpen(true);
+     
+    } catch (error) {
+      setError(error.response.data.error||error.status.error||error.message ||'Failed to fetch data');
+      // alert('Failed to fetch report.');
+    }finally{ setLoadingDetail((prev) => {
+      const newLoading = [...prev];
+      newLoading[index] = false; // Reset loading for the specific index
+      return newLoading;
+    });}
+  };
+ const ModalClosed=()=>{
+  setModalIsOpen(false)
+ }
+////format the amount to currency
+const NairaFormat=(value)=>{
+  return value.toLocaleString(undefined, { style: "currency", currency: "NGN" })}
+ 
   if (loading) {
     return <p>Loading...</p>;
 }
 
 return (
   <div>
-     {loading && <p>Loading...</p>} 
+     {loadingDetail? <p>Click each item to get the details...</p>:<p>Select date and click generate report</p>} 
     {error && <p style={{ color: 'red' }}>{error}</p>}
     <h1>{`${state.companyname.toUpperCase()} DAILY CASH BOOK`}</h1>
     <p>Date: {selectedDate}</p>
@@ -245,11 +217,14 @@ return (
         </tr>
         {cashData.details.map((detail, index) => (
           <tr key={index}>
-            <td>{detail.label.slice(2)}</td>
-            <td style={{color:'green', fontWeight:'bold',border:detail.label.slice(0,2)==='R-' && '2px solid black'}}>{detail.label.slice(0,2)==='R-'?detail.value.toLocaleString(undefined, { style: "currency", currency: "NGN" }):''}</td>
-            <td style={{color:'red', fontWeight:'bold',border:detail.label.slice(0,2)==='P-'&& '2px solid black'}}>{detail.label.slice(0,2)==='P-'?detail.value.toLocaleString(undefined, { style: "currency", currency: "NGN" }):''}</td>
+            <td 
+              onDoubleClick={()=>handleDetial(detail.label.slice(0,3),detail.label.slice(5),index)}
+            >({detail.label.slice(0,3)}){detail.label.slice(5)} {loadingDetail[index]?<img src={loadingGif}  alt="Loading..." style={{ width: '20px', height: '20px'}}/>:''}</td>
+            <td onDoubleClick={()=>handleDetial(detail.label.slice(0,3),detail.label.slice(5),index)} style={{color:'green', fontWeight:'bold',border:detail.label.slice(3,5)==='R-' && '2px solid black'}}>{detail.label.slice(3,5)==='R-'?NairaFormat(detail.value):''}</td>
+            <td onDoubleClick={()=>handleDetial(detail.label.slice(0,3),detail.label.slice(5),index)}  style={{color:'red', fontWeight:'bold',border:detail.label.slice(3,5)==='P-'&& '2px solid black'}}>{detail.label.slice(3,5)==='P-'?NairaFormat(detail.value):''}</td>
           </tr>
-        ))}
+        ))}  
+
       </tbody>
       <tfoot>
         <tr>
@@ -267,8 +242,16 @@ return (
         </tr>
       </tfoot>
     </table>
+
+{reportDetail&& reportDetail.length>0 && <CashBookDetail reportDetail={reportDetail} onClose={ModalClosed} isOpen={modalIsOpen} NairaFormat={NairaFormat} type={type} localhost={localhost}/>}
   </div>
+  
 );
+
 };
 
 export default DailyCashBook;
+
+
+
+
