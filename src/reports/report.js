@@ -3,7 +3,7 @@ import axios from 'axios';
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
 import { utils, writeFile } from 'xlsx';
-import loadingGif from './loading.gif'; 
+import loadingGif from '../loading.gif'; 
 import { FaFilePdf, FaFileExcel, FaPrint } from 'react-icons/fa';
 // import { localhost } from './env.js';
 

@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import jsPDF from 'jspdf';
-import loadingGif from './loading.gif'; // Your loading gif file
-import FormatDate from './formatdate'
+import loadingGif from '../loading.gif'; // Your loading gif file
+import FormatDate from '../formatdate';
+
 
 function DisbursementReport({state,setState} ) {
-  const [startDate, setStartDate] = useState(FormatDate(new Date()));
-  const [endDate, setEndDate] = useState(FormatDate(new Date()));
+  const [startDate, setStartDate] = useState(FormatDate(state.sesdate));
+  const [endDate, setEndDate] = useState(FormatDate(state.sesdate));
   const [report, setReport] = useState(null);
   const [searching ,setSearching ]=useState(false);
   

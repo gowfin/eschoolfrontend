@@ -1,9 +1,12 @@
-const formatDate = (date) => {
-    const d = new Date(date);
-    const day = String(d.getDate()).padStart(2, '0');
-    const month = String(d.getMonth() + 1).padStart(2, '0');
-    const year = d.getFullYear();
-    return `${day}/${month}/${year}`;
-  };
+import moment from 'moment';
 
-  export default formatDate;
+const formatDate = (date) => {
+  // Ensure the input date is correctly parsed into a moment object
+  const parsedDate = moment(date, ['YYYY/MM/DD', 'YYYY-MM-DD']);
+  if (!parsedDate.isValid()) {
+    return ''; // Return an empty string for invalid dates
+  }
+  return parsedDate.format('YYYY-MM-DD');
+ 
+};
+export default formatDate;

@@ -3,17 +3,18 @@ import axios from 'axios';
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
 import { utils, writeFile } from 'xlsx';
-import loadingGif from './loading.gif'; 
+import loadingGif from '../loading.gif'; 
 import { FaFilePdf, FaFileExcel, FaPrint } from 'react-icons/fa';
+import Dateformat from '../formatdate';
 // import { localhost } from './env.js';
 
 const Report = ({ state, setState }) => {
-  const {localhost}= state || 'localhost:3000';
+  const {localhost,sesdate}= state || 'localhost:3000';
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [startDate, setStartDate] = useState('');
-  const [endDate, setEndDate] = useState('');
+  const [startDate, setStartDate] = useState(Dateformat(sesdate));
+  const [endDate, setEndDate] = useState(Dateformat(sesdate));
   const branch=state.branch.slice(0,3);
 
   const buttonStyle = (num = 0) => ({

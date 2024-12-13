@@ -4,7 +4,7 @@ import jsPDF from 'jspdf';
 // import 'jspdf-autotable';
 import autoTable from 'jspdf-autotable';
 import { FaFilePdf, FaEye, FaPrint } from 'react-icons/fa';
-import loadingGif from './loading.gif'; 
+import loadingGif from '../loading.gif'; 
 import './fieldprintreport.css';
 const Report = ({ state, setState }) => {
   const localhost = state?.localhost;

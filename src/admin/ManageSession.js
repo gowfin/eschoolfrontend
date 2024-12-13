@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import '../account.css';
 import loadingGif from '../loading.gif'; // Your loading gif file
+import Dateformat from '../formatdate';
 // import { localhost } from '../env.js';
 
 const SessionMgt = ({ state }) => {
@@ -12,9 +13,8 @@ const SessionMgt = ({ state }) => {
 
   // Initialize sessionDate with the current date in YYYY-MM-DD format
   useEffect(() => {
-    const today = new Date();
-    const formattedDate = today.toISOString().slice(0, 10); // Format to YYYY-MM-DD
-    setSessionDate(formattedDate);
+    const today = Dateformat(new Date());
+        setSessionDate(today);
   }, []);
 
   const handleDate = async (e) => {

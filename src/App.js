@@ -5,22 +5,23 @@ import NavBar from './NavBar';
 import Dashboard from './Dashboard';
 import Client from './client';
 import Account from './account';
-import Report from './report';
-import Report2 from './report2';
-import FieldPrint from './fieldprintreport';
+import Report from './reports/report';
+import Report2 from './reports/report2';
+import FieldPrint from './reports/fieldprintreport';
 import WorkflowBatch from './workflow/batch';
 import Chart from './Chart/dispchart';
 import ManageSession from './admin/ManageSession';
 import Single from './workflow/single';
 import Bulk from './bulk';
 import Group from './group';
-import DisbursementDetail from './disbursement_rpt';
-import TrialBalance from './trialbalance';
-import Overdue from './overdue';
-import BalanceReport from './balance_report';
-import CashBook from './cashbook';
+import DisbursementDetail from './reports/disbursement_rpt';
+import TrialBalance from './reports/trialbalance';
+import Overdue from './reports/overdue';
+import BalanceReport from './reports/balance_report';
+import CashBook from './reports/cashbook';
 import GroupMgt from './groupmgt';
 import IorEReport from './reportcontrol';
+
 
 
 

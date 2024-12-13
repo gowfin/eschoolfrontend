@@ -1,8 +1,8 @@
 import {React,useState,useEffect} from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import ExpenseModal from './ExpenseModal';
-import IncomeModal from './incomeModal';
+import ExpenseModal from './morereports/ExpenseModal';
+import IncomeModal from './morereports/incomeModal';
 import BankModal from './bankModal';
 import AssetModal from './assetModal';
 import { 
@@ -312,7 +312,7 @@ const handleExModalClose = () => {
                 <ul style={{ listStyleType: 'none', padding: 0 }} >
                     <li style={{...navItemStyle, ...( hoveredItem === "Dashboard" ? navItemHoverStyle : {})}}  onMouseEnter={() => setHoveredItem('Dashboard')}  onMouseLeave={() => setHoveredItem(null)}
                ><FaChartBar /> <Link to="/">Dashboard</Link></li>
-                    <li style={{...navItemStyle, ...( hoveredItem === "report" ? navItemHoverStyle : {})}}  onMouseEnter={() => setHoveredItem('report')}  onMouseLeave={() => setHoveredItem(null)} onClick={toggleReportdown}><FaFileAlt /> <Link to="/report">Report</Link></li>
+                    <li style={{...navItemStyle, ...( hoveredItem === "report" ? navItemHoverStyle : {})}}  onMouseEnter={() => setHoveredItem('report')}  onMouseLeave={() => setHoveredItem(null)} onClick={toggleReportdown}><FaFileAlt /> <Link to="./reports/report">Report</Link></li>
                     <ul style={{ display: isReportdownOpen ? 'block' : 'none', paddingLeft: '20px' }}>
                     <li style={{...navItemStyle, ...( hoveredItem === "cashbook" ? navItemHoverStyle : {})}}  onMouseEnter={() => setHoveredItem('cashbook')}  onMouseLeave={() => setHoveredItem(null)}><Link to="/cashbook"><FaBook color='#4CAF50'/> Daily Cash Book Analysis</Link></li>
                         <li style={{...navItemStyle, ...( hoveredItem === "report1" ? navItemHoverStyle : {})}}  onMouseEnter={() => setHoveredItem('report1')}  onMouseLeave={() => setHoveredItem(null)}><Link to="/report"><FaUserTie color='blue' />Staff Perfirmance Report</Link></li>

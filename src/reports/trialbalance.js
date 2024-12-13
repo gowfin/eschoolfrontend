@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import Dateformat from '../formatdate';
 
 const TrialBalance = ({ state, setState }) => {
     const { localhost, companyname } = state;
-    const [selectedDate, setSelectedDate] = useState(state.sesdate.slice(0,10));
+    const [selectedDate, setSelectedDate] = useState(Dateformat(state.sesdate.slice(0,10)));
     const [reportBranchCode, setReportBranchCode] = useState(state.branch.slice(0,3));
     const [skipZeroBalances, setSkipZeroBalances] = useState(false);
     const [data, setData] = useState([]);

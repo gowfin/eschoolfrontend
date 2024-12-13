@@ -2,15 +2,17 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import loadingGif from "./loading.gif"; // Your loading gif file
 import { createRoot } from 'react-dom/client';
-import ProfitLossStatement from "./profitOrLoss";
+import ProfitLossStatement from "./morereports/profitOrLoss";
 import NewAndClosedClients from "./newandclosedclientdetails";
-import IncomeReport from "./incomereport";
+import IncomeReport from "./morereports/incomereport";
+import Dateformat from './formatdate';
+
 
 function ReportControl({ state }) {
   const { localhost, sesdate, branch } = state;
   const [reportType, setReportType] = useState("");
-  const [fromDate, setFromDate] = useState(sesdate);
-  const [toDate, setToDate] = useState(sesdate);
+  const [fromDate, setFromDate] = useState(Dateformat(sesdate));
+  const [toDate, setToDate] = useState(Dateformat(sesdate));
   const [branchCode, setBranchCode] = useState(branch.slice(0, 3));
   const [posting, setPosting] = useState(false);
   const [reportData, setReportData] = useState([]);
@@ -19,17 +21,19 @@ function ReportControl({ state }) {
   const isIncomeexp = reportType === "Income and Expense"? true:false;
   const isNewClient = reportType === "New and Closed Clients Detail"? true:false;
 
-  const formatDateForInput = (date) => {
-    const d = new Date(date);
-    return !isNaN(d) ? d.toISOString().split("T")[0] : "";
-  };
+ 
 const handlechange=(e)=>{
  setReportType(e.target.value)
  setReportData([]);
 }
   const generateReport = async () => {
+    if(reportType===''){
+   alert('You need to select a report type first.');
+    }
+    else{
     try {
       setPosting(true);
+      
       const response = await axios.post(
         `${localhost}/generateIncomeandorexpensenewclientReport`,
         {
@@ -46,6 +50,8 @@ const handlechange=(e)=>{
     } finally {
       setPosting(false);
     }
+  }
+
   };
 
   useEffect(() => {
@@ -84,7 +90,7 @@ const handlechange=(e)=>{
         <label>From Date:</label>
         <input
           type="date"
-          value={formatDateForInput(fromDate)}
+          value={Dateformat(fromDate)}
           onChange={(e) => setFromDate(e.target.value)}
         />
       </div>
@@ -92,7 +98,7 @@ const handlechange=(e)=>{
         <label>To Date:</label>
         <input
           type="date"
-          value={formatDateForInput(toDate)}
+          value={Dateformat(toDate)}
           onChange={(e) => setToDate(e.target.value)}
         />
       </div>}
