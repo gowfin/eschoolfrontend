@@ -5,14 +5,14 @@ import { createRoot } from 'react-dom/client';
 import ProfitLossStatement from "./morereports/profitOrLoss";
 import NewAndClosedClients from "./newandclosedclientdetails";
 import IncomeReport from "./morereports/incomereport";
-import Dateformat from './formatdate';
+import moment from 'moment';
 
 
 function ReportControl({ state }) {
   const { localhost, sesdate, branch } = state;
   const [reportType, setReportType] = useState("");
-  const [fromDate, setFromDate] = useState(Dateformat(sesdate));
-  const [toDate, setToDate] = useState(Dateformat(sesdate));
+  const [fromDate, setFromDate] = useState(sesdate);
+  const [toDate, setToDate] = useState(sesdate);
   const [branchCode, setBranchCode] = useState(branch.slice(0, 3));
   const [posting, setPosting] = useState(false);
   const [reportData, setReportData] = useState([]);
@@ -90,7 +90,7 @@ const handlechange=(e)=>{
         <label>From Date:</label>
         <input
           type="date"
-          value={Dateformat(fromDate)}
+          value={ moment(fromDate).format('YYYY-MM-DD')}
           onChange={(e) => setFromDate(e.target.value)}
         />
       </div>
@@ -98,7 +98,7 @@ const handlechange=(e)=>{
         <label>To Date:</label>
         <input
           type="date"
-          value={Dateformat(toDate)}
+          value={ moment(toDate).format('YYYY-MM-DD')}
           onChange={(e) => setToDate(e.target.value)}
         />
       </div>}

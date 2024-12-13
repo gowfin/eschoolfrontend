@@ -5,7 +5,8 @@ import 'jspdf-autotable';
 import { utils, writeFile } from 'xlsx';
 import loadingGif from '../loading.gif'; 
 import { FaFilePdf, FaFileExcel, FaPrint } from 'react-icons/fa';
-import Dateformat from '../formatdate';
+import moment from 'moment'
+// import Dateformat from '../formatdate';
 // import { localhost } from './env.js';
 
 const Report = ({ state, setState }) => {
@@ -13,8 +14,8 @@ const Report = ({ state, setState }) => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [startDate, setStartDate] = useState(Dateformat(sesdate));
-  const [endDate, setEndDate] = useState(Dateformat(sesdate));
+  const [startDate, setStartDate] = useState(sesdate);
+  const [endDate, setEndDate] = useState(sesdate);
   const branch=state.branch.slice(0,3);
 
   const buttonStyle = (num = 0) => ({
@@ -104,7 +105,7 @@ const Report = ({ state, setState }) => {
   };
 /// Set initial values for dates
 useEffect(() => {
-  const today = new Date().toISOString().split('T')[0]; // YYYY-MM-DD format
+  const today = sesdate; // YYYY-MM-DD format
   setStartDate(today);
   setEndDate(today);
 }, []);
@@ -296,7 +297,7 @@ const fetchTransactions = async () => {
           type="date"
           name="startDate"
           style={datestyle}
-          value={startDate}
+          value={moment(startDate).format('YYYY-MM-DD')}
           onChange={(e) => handleChange(e.target.name, e.target.value)}
         />
         End Date
@@ -304,7 +305,7 @@ const fetchTransactions = async () => {
           type="date"
           style={datestyle}
           name="endDate"
-          value={endDate}
+          value={moment(endDate).format('YYYY-MM-DD')}
           onChange={(e) => handleChange(e.target.name, e.target.value)}
         />
       </label>
