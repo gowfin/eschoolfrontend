@@ -1,79 +1,78 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import loadingGif from '../loading.gif'; // Your loading gif file
+import loadingGif from './loading.gif'; // Your loading gif file
 
-
-const ExpenseModal = ({ isOpen, onClose,localhost, expenseList,userid, onSelectExpense }) => {
-    const [selectedExpense,setSelectedExpense]=useState('');
+const IncomeModal = ({ isOpen, onClose, incomeList,localhost,userid,sesdate }) => {
+    const [selectedIncome,setSelectedIncome]=useState('');
     const [description,setDescription]=useState('');
-    const [code,setCode]=useState('');
     const [brcode,setBrcode]=useState('');
+    const [code,setCode]=useState('');
     const [amount,setAmount]=useState('');
     const [error, setError] = useState(null);
     const [posting, setPosting] = useState(false);
-   
-  if (!isOpen) return null; // Don't render if the modal is not open
 
-  const handleSelectExpense = (e) => {
+  // if (!isOpen) return null; // Don't render if the modal is not open
+
+  const handleSelectIncome = (e) => {
     const glCode=e.target.value;
-    setSelectedExpense(glCode); // Set selected expense
+    setSelectedIncome(glCode); // Set selected expense
     setCode(glCode.slice(0,5));
     setBrcode(glCode.slice(6,9));
     setDescription(glCode.slice(10))
+  
    
     
-   
-  };
-  const handleExModalClose = () => {
-    onClose(); // Close modal
   };
  const handleAmount = (e) => {
-    setAmount(e.target.value); 
+    setAmount(e.target.value); // Set selected expense
    
   };
-
+// const handleIncModalClose =()=>{
+//   onClose();
+// }
   const handleDescription = (e) => {
     setDescription(e.target.value); 
    
   };
   const handleSubmit = async(e) => {
-    try
+    try 
     {
       setPosting(true);
    const response=await axios.post(`${localhost}/journaltransactions`,{amount, 
-    debitGL:code+'-'+brcode, 
-    creditGL:'11102-'+brcode, 
+    debitGL:'11102-'+brcode, 
+    creditGL:code+'-'+brcode , 
     comment:description, 
     createdBy:userid,
-    journalType:'E',
-    branchCode:brcode
-  });
+    journalType:'I',
+    branchCode:brcode,
+    sesdate:sesdate
+  }
+    
+  );
     alert(response.data);
     setPosting(false);
-    setError(response.data);
+    setError(response.data)
    }
-   catch(error){setPosting(false); setError(error);}
+   catch(error){ setPosting(false); setError(error)}
   };
  
+
   return (
-    <div 
-    // style={styles.modalOverlay} 
-    style={{ zIndex: 1000, position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}
->
+    <div style={{ zIndex: 1000, position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}
+      >
       <div style={styles.modal}>
       {error && (
          <p className="error" style={error.includes('successful') ? { color: 'green' } : { color: 'red' }}>
           {error}
           </p>
            )}
-        <h3>Select Expense</h3>
-        <select onChange={handleSelectExpense} style={styles.select}>
-          <option value="">-- Select an expense --</option>
-          {expenseList && expenseList.map((expense, index) => (
-            <option key={index} value={expense}>{expense}</option>
+        <h3>Select Income</h3>
+        <select onChange={handleSelectIncome } style={styles.select}>
+          <option value="">-- Select an income --</option>
+        {incomeList.length!==0 && incomeList.map((income, index) => (
+            <option key={index} value={income}>{income}</option>
           ))}
         </select>
-        
         <label>Amount
         <input type='text'
         value={amount} 
@@ -92,7 +91,7 @@ const ExpenseModal = ({ isOpen, onClose,localhost, expenseList,userid, onSelectE
         </input>
         <button onClick={handleSubmit}>{posting ? <img src={loadingGif} alt="Loading..." style={{ width: '7%', height: '7%' }} />
         : 'Save'}</button>
-        <button style={{backgroundColor:'#FF9999'}} onClick={handleExModalClose}>Close</button>
+        <button style={{backgroundColor:'#FF9999'}} onClick={onClose}>Close</button>
       </div>
     </div>
   );
@@ -135,4 +134,4 @@ const styles = {
   },
 };
 
-export default ExpenseModal;
+export default IncomeModal;

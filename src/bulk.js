@@ -19,7 +19,7 @@ const Bulk = ({state}) => {
     const [depositAmounts, setDepositAmounts] = useState({});
     const [activeTab, setActiveTab] = useState('loans'); // State for active tab
     const [selectedRow, setSelectedRow] = useState(null);
-    const {products,userid} =state||{};
+    const {products,userid,sesdate} =state||{};
    
 
     useEffect(() => {
@@ -166,7 +166,7 @@ const handleDepositAmountChange = (AccountID, value) => {
                 try {
                     setSearching(true);
                     // setMessage('');
-                    const response = await axios.post(`${localhost}/postbulkdepositsrepayments`, { depositToPost,repayToPost,code,userid }); 
+                    const response = await axios.post(`${localhost}/postbulkdepositsrepayments`, { depositToPost,repayToPost,code,userid,sesdate }); 
                     const result = response.data;
                      console.log(result);
                    setMessage('Deposit and loans posted successfully');

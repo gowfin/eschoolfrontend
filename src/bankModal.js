@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import loadingGif from './loading.gif'; // Your loading gif file
 
-const BankModal = ({ isOpen, onClose, bankList,localhost,userid }) => {
+const BankModal = ({ isOpen, onClose, bankList,localhost,userid,sesdate }) => {
     const [selectedBank,setSelectedIncome]=useState('');
     const [description,setDescription]=useState('');
     const [brcode,setBrcode]=useState('');
@@ -49,7 +49,11 @@ const BankModal = ({ isOpen, onClose, bankList,localhost,userid }) => {
     comment:description, 
     createdBy:userid,
     journalType:'BANK',
-    branchCode:brcode});
+    branchCode:brcode,
+    sesdate: sesdate,
+  }
+   
+  );
     alert(response.data);
     setPosting(false);
     setError(response.data)

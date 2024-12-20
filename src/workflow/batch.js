@@ -99,11 +99,28 @@ try {
     }
   };
 
-  const handleReject = async(tranid) => {
-    setRejecting(true);
-    alert(`Rejected transaction: ${tranid} 'and ' ${rejecting}`);
-    // Handle rejection logic
-    setRejecting(false);
+  const handleReject = async(tranid,data,index) => {
+    setArrayRejecting((prevArrayLoading) => {
+      const newArray = [...prevArrayLoading];
+      newArray[index] = true;
+      return newArray;
+    });
+    try {
+      const response = await axios.post(`${localhost}/rejectpendingtrx`, {transactionNbr:tranid,group:true });
+      alert(response.data.message);
+       console.log(data);
+    } catch (error) {
+      alert('Error posting transaction: ' + error.response?.data?.error || error.message);
+    } finally {
+      handleView (data.GroupID,data.ValueDate,index); // Refresh the workflow list
+      setArrayRejecting((prevArrayLoading) => {
+        const newArray = [...prevArrayLoading];
+        newArray[index] = false;
+        return newArray;
+      });
+     
+    }
+    
   };
 
   // Set the branch code based on your logic
@@ -244,19 +261,19 @@ console.log(branchCode);
             {workflowDataInd.map((item,index) => (
               <tr key={index}>
                 <td>{item.AccountID}</td>
-                <td>{item.tranid}</td>
-                <td style={{backgroundColor:'#b3b300'}}>{item.amount}</td>
+                <td>{item.TranID}</td>
+                <td style={{backgroundColor:'#b3b300'}}>{item.Amount}</td>
                 <td>{item.DebitGL}</td>
                 <td>{item.CreditGL}</td>
                 <td>{item.Runningbal}</td>
                 <td>{new Date(item.ValueDate).toLocaleDateString('en-GB', {day: '2-digit',month: '2-digit',year: 'numeric'})}</td>
                 <td>{new Date(item.DateEffective).toLocaleDateString('en-GB', {day: '2-digit',month: '2-digit',year: 'numeric'})}</td>
-                <td>{item.CustNO}</td>
+                <td>{item.CustNo}</td>
                 <td style={{backgroundColor:'#b3b300'}}>{item.StmtRef}</td>
                 <td>{item.BranchID}</td>
                 <td>{item.ChequeNbr}</td>
                 <td>{item.CreatedBy}</td>
-                <td>{item.transactionNbr}</td>
+                <td>{item.TransactionNbr}</td>
                 <td>{item.Groupid}</td>
                 <td>{item.Grouptrxno}</td>
                 <td>{item.IntElement}</td>
@@ -264,7 +281,7 @@ console.log(branchCode);
                 <td>
                   <button onClick={() => handleApprove(item,index)}>{arrayApproving[index] ? <img src={loadingGif} alt="Loading..." style={{ width: '20px', height: '20px' }} />:'Approve'}</button>
                   
-                  <button style={{ marginTop: '10px',backgroundColor: '#f44336' }} onClick={() => handleReject(item,index)}>{rejecting ? <img src={loadingGif} alt="Loading..." style={{ width: '20px', height: '20px' }} />:'Reject'}</button>
+                  <button style={{ marginTop: '10px',backgroundColor: '#f44336' }} onClick={() => handleReject(item.TransactionNbr,item,index)}>{arrayRejecting[index] ? <img src={loadingGif} alt="Loading..." style={{ width: '20px', height: '20px' }} />:'Reject'}</button>
                 </td>
               </tr>
             ))}

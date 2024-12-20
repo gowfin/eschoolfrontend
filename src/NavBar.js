@@ -1,8 +1,8 @@
 import {React,useState,useEffect} from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import ExpenseModal from './morereports/ExpenseModal';
-import IncomeModal from './morereports/incomeModal';
+import ExpenseModal from './ExpenseModal';
+import IncomeModal from './incomeModal';
 import BankModal from './bankModal';
 import AssetModal from './assetModal';
 import { 
@@ -59,6 +59,7 @@ const [hoveredItem, setHoveredItem] = useState(null);
     
 //HIDE SESSION MGT AND WORKFLOW FOR NON-APPROVING OFFICERS
     const displayadminroles=userrole==='Administrator'||userrole==='Manager';
+    const displayGL=!userrole.toUpperCase()==='CSO' && !userrole.toUpperCase()==='MARKETER';
 // const displayadminroles=false;
 /////////////////DRAGGING FOR HANGING BUTTON/////////////
 const [position, setPosition] = useState({ x: 170, y: 90 }); // Initial position
@@ -217,6 +218,7 @@ const handleExModalClose = () => {
         userid={userid}
         onSelectExpense={expenseList}
         localhost={localhost}
+        sesdate={sesdate}
       />)}
       {incomeList.length!==0 && isIncOpen && <IncomeModal
         isOpen={isIncOpen}
@@ -225,6 +227,7 @@ const handleExModalClose = () => {
         userid={userid}
         onSelectIncome={incomeList}
         localhost={localhost}
+        sesdate={sesdate}
       />}
 
         {bankList.length!==0 && isBnkOpen && <BankModal
@@ -234,6 +237,7 @@ const handleExModalClose = () => {
         userid={userid}
         onSelectBank={bankList}
         localhost={localhost}
+        sesdate={sesdate}
       />} 
       {assetList.length!==0 && isAstOpen && <AssetModal
         isOpen={isAstOpen}
@@ -242,6 +246,7 @@ const handleExModalClose = () => {
         userid={userid}
         onSelectAsset={assetList}
         localhost={localhost}
+        sesdate={sesdate}
       />}  
       {incomeList.length!==0 && isGLOpen && <GLStatement
         isOpen={isGLOpen}
@@ -284,11 +289,11 @@ const handleExModalClose = () => {
           boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.2)",
           cursor: "pointer",
         }} onClick={() =>{setIsFABOpen(!isFABOpen);setIsExOpen(false);setIsIncOpen(false);}}>
-                     <i className="fas fa-plus"></i> GL Posting
+                     <i className="fas fa-plus"></i>{displayGL? 'GL Posting':'Not Allowed'}
                 </button>
              
                 
-                {isFABOpen && (
+                {isFABOpen &&displayGL&& (
                 <div style={{ 
                   position: 'absolute', 
                   bottom: '50px', 

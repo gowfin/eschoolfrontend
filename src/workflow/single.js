@@ -70,10 +70,29 @@ const handleBranchCodeChange = (event) => {
     }
   };
 
-  const handleReject = async (tranid) => {
-    setLoading(true);
-    alert(`Rejected transaction: ${tranid}`);
-    setLoading(false);
+  const handleReject = async (tranid,data,index) => {
+    setArrayRejecting((prevArrayLoading) => {
+      const newArray = [...prevArrayLoading];
+      newArray[index] = true;
+      return newArray;
+    });
+    try {
+      const response = await axios.post(`${localhost}/rejectpendingtrx`, {transactionNbr:tranid,group:false });
+      alert(response.data.message);
+       console.log(data);
+    } catch (error) {
+      alert('Error posting transaction: ' + error.response?.data?.error || error.message);
+    } finally {
+      fetchWorkflowData(); // Refresh the workflow list 
+      setArrayRejecting((prevArrayLoading) => {
+        const newArray = [...prevArrayLoading];
+        newArray[index] = false;
+        return newArray;
+      });
+     
+    }
+   
+    
   };
 
   useEffect(() => {

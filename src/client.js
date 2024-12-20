@@ -26,7 +26,7 @@ const [isRadioSelected, setIsRadioSelected] = useState(false);
 ////////////////////////////////////////////////////////////////////
 
 
-const { branch, logindata, groups, biztype,userid,userrole,status,products } = state || {};
+const { branch, logindata, groups, biztype,userid,userrole,status,products,sesdate } = state || {};
 
 const biztypes=biztype.split(',');
 const grouplist=groups;
@@ -105,7 +105,8 @@ const handleBlur=(e)=>{
       bvn: "",
       nuban: "",
       dob: "",
-      maritalStatus: ""
+      maritalStatus: "",
+      sesdate:sesdate
   });
   //Clear the images
   setPixPreview ("");
@@ -163,7 +164,8 @@ setSignPreview (signSource);
       bvn: data.BVN,
       nuban: data.Nuban,
       dob: formatDate(data.DOB),
-      maritalStatus:maritalStatus
+      maritalStatus:maritalStatus,
+      sesdate:sesdate,
     });
 
     setUpdating(true);
@@ -199,7 +201,8 @@ const [formData, setFormData] = useState({
     bvn: "",
     nuban: "",
     dob: "1900-01-01",
-    maritalStatus: ""
+    maritalStatus: "",
+    sesdate:sesdate,
   });
   
 

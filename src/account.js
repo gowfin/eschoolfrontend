@@ -347,10 +347,10 @@ setSignPreview (signSource);
         </select><button style={{width:'40%',leftMargin:'10%'}} className="search-btn" onClick={handledisbModal}>Disbursement</button></form></div>
 
    <div>{isTrxModalOpen &&<TransactionModal userid={userid} products={products} isOpen={true} onClose={handletrxModalClose} isDeposit={transactionType==='Deposit' ? true:false} isWithdr={transactionType==='Withdrawal' ? true:false} isRepay={transactionType==='Repayment' ? true:false} transactionType={transactionType} AccountID={trxAccountID} ProductID={trxProductType} RunningBal={trxRunningBal} AccountName={trxAccName} CustNo={clientData.custno}
-   localhost={localhost}   
+   localhost={localhost} sesdate={sesdate}  
    
    />}</div>
-     <div>{showDisbModal &&<DisbursementModal userid={userid} products={products} isOpen={true} onClose={handleDisbModalClose}  AccountID={trxAccountID}  AccountName={trxAccName} CustNo={clientData.custno}  accountName={clientData.Accountname} localhost={localhost} GroupID={clientData.groupid} />}</div>
+     <div>{showDisbModal &&<DisbursementModal userid={userid} products={products} isOpen={true} onClose={handleDisbModalClose}  AccountID={trxAccountID}  AccountName={trxAccName} CustNo={clientData.custno}  accountName={clientData.Accountname} localhost={localhost} GroupID={clientData.groupid} sesdate={sesdate}/>}</div>
  
 
       <form>

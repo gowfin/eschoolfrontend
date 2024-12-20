@@ -3,7 +3,7 @@ import axios from 'axios';
 import loadingGif from './loading.gif'; // Your loading gif file
 
 
-const AssetModal = ({ isOpen, onClose,localhost, assetList,userid, onSelectAsset }) => {
+const AssetModal = ({ isOpen, onClose,localhost, assetList,userid, onSelectAsset,sesdate }) => {
     const [selectedAsset,setSelectedAsset]=useState('');
     const [description,setDescription]=useState('');
     const [code,setCode]=useState('');
@@ -51,7 +51,8 @@ const AssetModal = ({ isOpen, onClose,localhost, assetList,userid, onSelectAsset
     comment:description, 
     createdBy:userid,
     journalType:'A',
-    branchCode:brcode
+    branchCode:brcode,
+    sesdate:sesdate,
   });
     alert(response.data);
     setPosting(false);

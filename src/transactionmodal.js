@@ -3,7 +3,7 @@ import axios from 'axios';
 import loadingGif from './loading.gif'; // Your loading gif file
 import './transactionmodal.css'
 
-const TransactionModal = ({ userid, products, isOpen, onClose, localhost, fetchData, isDeposit, isWithdr, isRepay, transactionType, AccountID, ProductID, RunningBal, AccountName, CustNo }) => {
+const TransactionModal = ({ userid, products, isOpen, onClose, localhost, fetchData, isDeposit, isWithdr, isRepay, transactionType, AccountID, ProductID, RunningBal, AccountName, CustNo,sesdate }) => {
   const [amount, setAmount] = useState('');
   const [description, setDescription] = useState(isDeposit ? `Csh Dep IFO ${AccountName}` : isWithdr ? `Csh Wdr by ${AccountName}` : `Payment by ${AccountName}`);
   const [error, setError] = useState(null);
@@ -52,6 +52,7 @@ const handleBlur = async () => {
   } 
 };
   const handleSubmit = async () => {
+  
     setPosting(true);
     if (transactionType === 'Repayment'){
       try {
@@ -75,11 +76,12 @@ const handleBlur = async () => {
           name,
           accountValue,
           interestPercent:(loanSchData.IntRepay/loanSchData.PrinRepay)+1,
-          description 
+          description ,
+      
         }
         ];
           // alert(loanSchData.IntRepay/loanSchData.PrinWithInt);
-        const response = await axios.post(`${localhost}/postrepayments`, { repayToPost, code, userid });
+        const response = await axios.post(`${localhost}/postrepayments`, { repayToPost, code, userid,sesdate });
         const result = response.data;
         console.log(result);
         setError('Posted successfully');
@@ -117,7 +119,7 @@ const handleBlur = async () => {
         }
         ];
   
-        const response = await axios.post(`${localhost}/postbulkdeposits`, { depositToPost, code, userid });
+        const response = await axios.post(`${localhost}/postbulkdeposits`, { depositToPost, code, userid,sesdate });
         const result = response.data;
         console.log(result);
         setError('Posted successfully');
