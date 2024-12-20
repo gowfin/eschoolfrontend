@@ -59,8 +59,8 @@ const [hoveredItem, setHoveredItem] = useState(null);
     
 //HIDE SESSION MGT AND WORKFLOW FOR NON-APPROVING OFFICERS
     const displayadminroles=userrole==='Administrator'||userrole==='Manager';
-    const displayGL=!userrole.toUpperCase()==='CSO' && !userrole.toUpperCase()==='MARKETER';
-// const displayadminroles=false;
+    const displayGL=userrole.toUpperCase()==='CSO' || userrole.toUpperCase()==='MARKETER'? false:true;
+    // const displayadminroles=false;
 /////////////////DRAGGING FOR HANGING BUTTON/////////////
 const [position, setPosition] = useState({ x: 170, y: 90 }); // Initial position
 const [dragging, setDragging] = useState(false);
@@ -331,9 +331,9 @@ const handleExModalClose = () => {
                     <li style={{...navItemStyle, ...( hoveredItem === "account" ? navItemHoverStyle : {})}}  onMouseEnter={() => setHoveredItem('account')}  onMouseLeave={() => setHoveredItem(null)}><FaMoneyCheckAlt color='green'/> <Link to="/account">Account</Link></li>
                     <li style={{...navItemStyle, ...( hoveredItem === "bulk" ? navItemHoverStyle : {})}}  onMouseEnter={() => setHoveredItem('bulk')}  onMouseLeave={() => setHoveredItem(null)}><FaClipboardList /> <Link to="/bulk">Bulk Posting</Link></li>
                     <li style={{...navItemStyle, ...( hoveredItem === "group" ? navItemHoverStyle : {})}}  onMouseEnter={() => setHoveredItem('group')}  onMouseLeave={() => setHoveredItem(null)}><FaUsers color="blue"/> <Link to="/group">Group Posting</Link></li>
-                    <li style={{...navItemStyle, ...( hoveredItem === "groupmgt" ? navItemHoverStyle : {})}}  onMouseEnter={() => setHoveredItem('groupmgt')}  onMouseLeave={() => setHoveredItem(null)}><FaUserFriends  color="green"/> <Link to="/groupmgt">Group Management</Link></li>
+                    {displayGL &&<li style={{...navItemStyle, ...( hoveredItem === "groupmgt" ? navItemHoverStyle : {})}}  onMouseEnter={() => setHoveredItem('groupmgt')}  onMouseLeave={() => setHoveredItem(null)}><FaUserFriends  color="green"/> <Link to="/groupmgt">Group Management</Link></li>}
                     <li style={{...navItemStyle, ...( hoveredItem === "client" ? navItemHoverStyle : {})}}  onMouseEnter={() => setHoveredItem('client')}  onMouseLeave={() => setHoveredItem(null)}><FaUserPlus /> <Link to="/client">Client</Link></li>
-                    <li style={{...navItemStyle, ...( hoveredItem === "GLStatement" ? navItemHoverStyle : {})}}  onMouseEnter={() => setHoveredItem('GLStatement')}  onMouseLeave={() => setHoveredItem(null)}><FaRegChartBar /> <Link to="/GLStatement">GL Statement</Link></li>
+                    {displayGL &&<li style={{...navItemStyle, ...( hoveredItem === "GLStatement" ? navItemHoverStyle : {})}}  onMouseEnter={() => setHoveredItem('GLStatement')}  onMouseLeave={() => setHoveredItem(null)}><FaRegChartBar /> <Link to="/GLStatement">GL Statement</Link></li>}
                     <li style={{...navItemStyle, ...( hoveredItem === "dispchart" ? navItemHoverStyle : {})}}  onMouseEnter={() => setHoveredItem('dispchart')}  onMouseLeave={() => setHoveredItem(null)}><FaRegChartBar /> <Link to="/dispchart">Chart</Link></li>
                     <li style={{...navItemStyle, ...( hoveredItem === "workflow" ? navItemHoverStyle : {})}}  onMouseEnter={() => setHoveredItem('workflow')}  onMouseLeave={() => setHoveredItem(null)} onClick={toggleDropdown}>
                         {displayadminroles && <span style={{ color: 'blue', textDecoration: 'underline' }}>< FaProjectDiagram/>Workflow</span>}

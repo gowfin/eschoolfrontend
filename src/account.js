@@ -10,7 +10,7 @@ import DisbursementModal  from './disbursementModal';
 
 
 const AccountPage = ({ state, setState }) => {
-  const {localhost,sesdate}= state;
+  const {localhost,sesdate,userrole}= state;
   const [searching, setSearching] = useState(false);
   const [searchingName, setSearchingName] = useState(false);
   const [pixPreview, setPixPreview] = useState(null);
@@ -44,7 +44,9 @@ const AccountPage = ({ state, setState }) => {
   const [trxRunningBal,setTrxRunningBal]=useState('');
   const [trxAccName,setTrxAccName]=useState('');
   const [showAllAccounts, setShowAllAccounts] = useState(false);
-    
+
+  const displayGL=userrole.toUpperCase()==='CSO' || userrole.toUpperCase()==='MARKETER'? false:true;
+ 
 ///search for custno from client creation
 useEffect(() => {
  
@@ -338,19 +340,23 @@ setSignPreview (signSource);
   }
     return (
     <div className="account-page">
-      <div style={{display:'flex',direction:'row',width:'95%'}}><form><select style={{width:'55%'}} name="product"  value="" onChange={handleNewAccount} required>
+      <div style={{display:'flex',direction:'row',width:'95%'}}>
+        <form>
+          <select style={{width:'55%'}} name="product"  value="" onChange={handleNewAccount} required>
             <option  value="">Select to create Account</option>
            {products.filter((product) => product.name.includes("Savings")).map((product,index)=>(
           <option key={index} value={product.name.replace(' accounts','')}>{product.name}</option>
-          ))}
-          
-        </select><button style={{width:'40%',leftMargin:'10%'}} className="search-btn" onClick={handledisbModal}>Disbursement</button></form></div>
+          ))} 
+        </select>
+        {displayGL&&<button style={{width:'40%',leftMargin:'10%'}} className="search-btn" onClick={handledisbModal}>Disbursement</button>}
+        </form>
+        </div>
 
-   <div>{isTrxModalOpen &&<TransactionModal userid={userid} products={products} isOpen={true} onClose={handletrxModalClose} isDeposit={transactionType==='Deposit' ? true:false} isWithdr={transactionType==='Withdrawal' ? true:false} isRepay={transactionType==='Repayment' ? true:false} transactionType={transactionType} AccountID={trxAccountID} ProductID={trxProductType} RunningBal={trxRunningBal} AccountName={trxAccName} CustNo={clientData.custno}
+   <div>{isTrxModalOpen && displayGL &&<TransactionModal userid={userid} products={products} isOpen={true} onClose={handletrxModalClose} isDeposit={transactionType==='Deposit' ? true:false} isWithdr={transactionType==='Withdrawal' ? true:false} isRepay={transactionType==='Repayment' ? true:false} transactionType={transactionType} AccountID={trxAccountID} ProductID={trxProductType} RunningBal={trxRunningBal} AccountName={trxAccName} CustNo={clientData.custno}
    localhost={localhost} sesdate={sesdate}  
    
    />}</div>
-     <div>{showDisbModal &&<DisbursementModal userid={userid} products={products} isOpen={true} onClose={handleDisbModalClose}  AccountID={trxAccountID}  AccountName={trxAccName} CustNo={clientData.custno}  accountName={clientData.Accountname} localhost={localhost} GroupID={clientData.groupid} sesdate={sesdate}/>}</div>
+     <div>{showDisbModal && displayGL &&<DisbursementModal userid={userid} products={products} isOpen={true} onClose={handleDisbModalClose}  AccountID={trxAccountID}  AccountName={trxAccName} CustNo={clientData.custno}  accountName={clientData.Accountname} localhost={localhost} GroupID={clientData.groupid} sesdate={sesdate}/>}</div>
  
 
       <form>
