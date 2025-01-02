@@ -6,6 +6,9 @@
                else if (companyName.toUpperCase() === 'MACMAY') {
                 return 'Macmay Group';
             }
+            else if (companyName.toUpperCase() === 'CHANGINGLIFE') {
+                return 'Changing Life For Better';
+            }
                else if (companyName.toUpperCase() === '2HAPI') {
                     return 'Helping hands for Active People Initiative';
                 }
