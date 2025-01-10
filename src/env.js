@@ -7,10 +7,18 @@
                
                    
                }
-               else if (companyName.toUpperCase() === 'CHANGINGLIFE') {
+               else if (companyName.toUpperCase() === 'THETOP') {
                     //  return 'http://localhost:3005'; 
-               return 'https://gowfinchanginglifebackend.vercel.app';
+               return 'https://gowfinthetopbackend2.vercel.app';
                     }
+                    else if (companyName.toUpperCase() === 'SILVERLING') {
+                        
+                   return 'https://gowfinsilverlingbackend2.vercel.app';
+                        }
+                    else if (companyName.toUpperCase() === 'CHANGINGLIFE') {
+                        //  return 'http://localhost:3005'; 
+                   return 'https://gowfinchanginglifebackend.vercel.app';
+                        }
                else if (companyName.toUpperCase() === 'MACMAY') {
                             //   return 'http://localhost:3005';
                       return 'https://gowfinbackend.onrender.com';

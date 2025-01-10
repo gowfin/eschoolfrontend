@@ -9,6 +9,14 @@
             else if (companyName.toUpperCase() === 'CHANGINGLIFE') {
                 return 'Changing Life For Better';
             }
+            else if(companyName.toUpperCase() === 'THETOP'){ 
+                return 'For The Top Nigeria Limited';
+                
+                }
+            else if(companyName.toUpperCase() === 'SILVERLING'){ 
+                    return 'Silverling Trust Empowerment Organization';
+                    
+                }
                else if (companyName.toUpperCase() === '2HAPI') {
                     return 'Helping hands for Active People Initiative';
                 }
