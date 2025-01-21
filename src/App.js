@@ -8,10 +8,11 @@ import Account from './account';
 import Report from './reports/report';
 import Report2 from './reports/report2';
 import FieldPrint from './reports/fieldprintreport';
-import WorkflowBatch from './workflow/batch';
 import Chart from './Chart/dispchart';
 import ManageSession from './admin/ManageSession';
 import Single from './workflow/single';
+import WorkflowBatch from './workflow/batch';
+import Pendingloans from './workflow/pendingloans';
 import Bulk from './bulk';
 import Group from './group';
 import DisbursementDetail from './reports/disbursement_rpt';
@@ -94,6 +95,7 @@ const App = () => {
                 <Route path="/client" element={<Client state={state} setState={setState} />} />
                 <Route path="/dispchart" element={<Chart state={state} setState={setState} />} />
                 <Route path="/workflow/batch" element={<WorkflowBatch state={state} setState={setState} />} />
+                <Route path="/workflow/pendingloans" element={<Pendingloans state={state} setState={setState} />} />
                 <Route path="/admin/managesession" element={<ManageSession  state={state} setState={setState}/>} />
                 <Route path="/bulk" element={<Bulk state={state}/>} />
                 <Route path="/group" element={<Group state={state}/>} />
@@ -125,8 +127,22 @@ const App = () => {
                   }}
                   onClick={()=>{setIsNavbarShowing(!isNavbarShowing)}}
                 >{isNavbarShowing?'hide NavBar':'Show NavBar'}</i></div>)}
+              {
+  <>
+    {state.sesdate?'Session Date: ':''} <b style={{ zIndex: 100, color: 'orange' }}>  {state.sesdate?.slice(0, 10)}
+    </b>
+    {loggedIn?'. You logged in as: ': '=>>Enter username and password then click login to proceed.'}
+    <b style={{ color: 'green' }}>{loggedIn?state.userid?.toUpperCase():''}</b>
+    <i style={{ color: '#111' }}>
+      {loggedIn? ' ('+state.userrole +')':''}
+    </i>
+  </>
+}
+ 
         </div>
-      </div>
+        
+      
+             </div>
     </Router>
   );
 };

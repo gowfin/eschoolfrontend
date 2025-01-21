@@ -340,7 +340,7 @@ const handleExModalClose = () => {
                         <ul style={{ display: isDropdownOpen ? 'block' : 'none', paddingLeft: '20px' }}>
                             <li style={{...navItemStyle, ...( hoveredItem === "single" ? navItemHoverStyle : {})}}  onMouseEnter={() => setHoveredItem('single')}  onMouseLeave={() => setHoveredItem(null)}><Link to="/workflow/single">Single Transactions</Link></li>
                             <li style={{...navItemStyle, ...( hoveredItem === "batch" ? navItemHoverStyle : {})}}  onMouseEnter={() => setHoveredItem('batch')}  onMouseLeave={() => setHoveredItem(null)}><Link to="/workflow/batch">Group/Batch/Mobile Trx</Link></li>
-                            <li style={{...navItemStyle, ...( hoveredItem === "disbursed" ? navItemHoverStyle : {})}}  onMouseEnter={() => setHoveredItem('disbursed')}  onMouseLeave={() => setHoveredItem(null)}><Link to="/workflow/disbursement">Pending Disbursement</Link></li>
+                            <li style={{...navItemStyle, ...( hoveredItem === "disbursed" ? navItemHoverStyle : {})}}  onMouseEnter={() => setHoveredItem('disbursed')}  onMouseLeave={() => setHoveredItem(null)}><Link to="/workflow/pendingloans">Pending Disbursement</Link></li>
                         </ul>
                     </li>
                     {displayadminroles && <li style={{...navItemStyle, ...( hoveredItem === "session" ? navItemHoverStyle : {})}}  onMouseEnter={() => setHoveredItem('session')}  onMouseLeave={() => setHoveredItem(null)}><Link to="/admin/ManageSession"><FaFileContract/>Manage Session</Link></li>}
