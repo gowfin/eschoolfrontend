@@ -6,6 +6,8 @@ import { useLocation } from 'react-router-dom';
 import  './menu.css';
 import TransactionModal  from './transactionmodal';
 import DisbursementModal  from './disbursementModal';
+import Repayschedule  from './repaymentscheduleModal';
+
 // import { localhost } from './env.js';
 
 
@@ -38,6 +40,7 @@ const AccountPage = ({ state, setState }) => {
   const location = useLocation();
   const [isTrxModalOpen,setIsTrxModalOpen]=useState(false);
   const [showDisbModal,setShowDisbModal]=useState(false);
+  const [showRepScheduleModal,setShowRepScheduleModal]=useState(false);
   const [transactionType,setTransactionType]=useState('');
   const [trxProductType,setTrxProductType]=useState('');
   const [trxAccountID,setTrxAccountID]=useState('');
@@ -323,6 +326,14 @@ setSignPreview (signSource);
     setTransactionType('Repayment')
   
   };
+  
+  const handleViewLoanscheduleCloseMenu = () => {
+    setShowMenu(false);
+    setShowRepScheduleModal(true);
+
+    setTransactionType('viewloanschedule')
+  
+  };
   const handleCloseWdrMenu = () => {
     setShowMenu(false);
     setIsTrxModalOpen(true);
@@ -337,6 +348,9 @@ setSignPreview (signSource);
   }
   const handleDisbModalClose=()=>{
     setShowDisbModal(false);
+  }
+  const handleRepScheduleModalClose=()=>{
+    setShowRepScheduleModal(false);
   }
     return (
     <div className="account-page">
@@ -357,6 +371,7 @@ setSignPreview (signSource);
    
    />}</div>
      <div>{showDisbModal && displayGL &&<DisbursementModal userid={userid} products={products} isOpen={true} onClose={handleDisbModalClose}  AccountID={trxAccountID}  AccountName={trxAccName} CustNo={clientData.custno}  accountName={clientData.Accountname} localhost={localhost} GroupID={clientData.groupid} sesdate={sesdate}/>}</div>
+     <div>{showRepScheduleModal && displayGL &&<Repayschedule isOpen={true} onClose={handleRepScheduleModalClose}  loanID={trxAccountID}  custno={clientData.custno} localhost={localhost} />}</div>
  
 
       <form>
@@ -459,7 +474,7 @@ setSignPreview (signSource);
     {dep && <p onClick={handleCloseWdrMenu}>Withdrawal</p>}
     {dep && <p onClick={handleCloseMenu}>Transfer</p>}
     {!dep && <p onClick={handleCloseRepMenu}>Repayment</p>}
-    {!dep && <p onClick={handleCloseMenu}>View Loan Schedule</p>}
+    {!dep && <p onClick={handleViewLoanscheduleCloseMenu}>View Loan Schedule</p>}
     {!dep && <p onClick={handleCloseMenu}>See Guarantor</p>}
     <button onClick={handleCloseMenu}>Close</button>
   </div>

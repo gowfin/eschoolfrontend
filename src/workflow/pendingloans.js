@@ -11,17 +11,20 @@ const LoanApprovalTable = ({state}) => {
   }, []);
 
   const fetchLoans = async () => {
-  
+    setLoading(true);
     try {
       const response = await axios.get(`${localhost}/getpendingloans`);
       setLoans(response.data);
+      setLoading(false);
     } catch (error) {
+      setLoading(false);
       console.error("Error fetching loans:", error);
     }
   };
 
   const handleAction = async (loanId,custno,name,interestPercent,bvn,instalment,disburseddate,amount,paymentfrequency,term,GLCode,moratorium,InterestRate,monthduration,action) => {
-    if(!setLoading){ //Disable clicking while it is still running
+    
+    if(loading===false){ //Disable clicking while it is still running
       setLoading(true);
     const branchCode=branch.slice(0,3);
     try {
@@ -46,7 +49,7 @@ const LoanApprovalTable = ({state}) => {
 
   return (
     <div>
-      <h1>Loan Approval Table</h1>
+      <h1>Pending Loan Approval Table</h1>
       {loading && <p>Processing... Please wait.</p>}
       <table border="1" style={{ width: "100%", borderCollapse: "collapse" }}>
         <thead>

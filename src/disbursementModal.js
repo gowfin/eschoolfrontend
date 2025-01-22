@@ -50,9 +50,10 @@ const DisbursementModal = ({ isOpen, onClose,CustNo,accountName,userid, products
  
 
    // Format schedule data for tabular display
+   //console.log(schedule);
    
    const formattedSchedule = schedule? schedule.map(item => 
-    ` ${item.installment.toString().padEnd(4)}${item.repayWithInt.padEnd(12)} ${item.date.toString().padEnd(12)} ${item.principalRepay.padEnd(12)} ${item.interest.padEnd(12)} ${item.balance.padEnd(12)} ${item.status.padEnd(14)} ${item.clientID.padEnd(12)}`
+    ` ${item.installment.toString().padEnd(4)}${item.repayWithInt.toString().padEnd(12)} ${item.date.toString().padEnd(12)} ${item.principalRepay.toString().padEnd(12)} ${item.interest.toString().padEnd(12)} ${item.balance.toString().padEnd(12)} ${item.status.toString().padEnd(14)} ${item.clientID.toString().padEnd(12)}`
   ):'';
 
   const header = `SN   Installment  Date         Principal    Interest     Balance      status         ClientID     \n`;
