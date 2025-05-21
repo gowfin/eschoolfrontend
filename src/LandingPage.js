@@ -5,18 +5,41 @@ import { useNavigate } from 'react-router-dom';
 const LandingPage = () => {
   const [quizType, setQuizType] = useState('');
   const navigate = useNavigate();
+  const [name, setName] = useState('');
+  const [course, setCourse] = useState('');
 
   const handleStart = () => {
-    if (quizType) {
-      navigate(`/quiz/${quizType}`);
-    } else {
-      alert('Please select the Domain for the quiz.');
+   if (!name.trim() || !course.trim()) {
+      alert('Please enter your name or Course.');
+      return;
     }
+
+    if (!quizType) {
+      alert('Please select the Domain for the quiz.');
+      return;
+    }
+
+    // Pass both name and quizType via URL parameters
+    navigate(`/quiz/${quizType}?name=${encodeURIComponent(name)}&course=${encodeURIComponent(course)}`);
   };
 
   return (
     <div style={styles.container}>
        <div style={styles.select}><b>CERTIFIED INFORMATION SYSTEM SECURITY PROFESSIONAL(CISSP) QUIZ</b></div>
+       <input
+        type="text"
+        placeholder="Enter your name"
+        value={name}
+        onChange={e => setName(e.target.value)}
+        style={styles.input}
+      /><br></br>
+      <input
+        type="text"
+        placeholder="Enter the Course"
+        value={course}
+        onChange={e => setCourse(e.target.value)}
+        style={styles.input}
+      />
       <h2>Select Quiz Domain</h2>
       <select
         value={quizType}
@@ -24,6 +47,7 @@ const LandingPage = () => {
         style={styles.select}
       >
         <option value="">-- Choose Domain --</option>
+          <option value="cbt">Computer Based Test (CBT)</option>
         <option value="domain1">Domain 1 - Security & Risk Management 16%</option>
         <option value="domain2">Domain 2 - Asset Security 10%</option>
         <option value="domain3">Domain 3 - Security Architecture and Engineering	13%</option>
@@ -32,6 +56,7 @@ const LandingPage = () => {
         <option value="domain6">Domain 6 - Security Assessment and Testing	12%</option>
         <option value="domain7">Domain 7 - Security Operations	13%</option>
         <option value="domain8">Domain 8 - Software Development Security	10%</option>
+        <option value="test">Test</option>
       </select>
 
       <button style={styles.button} onClick={handleStart}>
