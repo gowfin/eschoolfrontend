@@ -1,0 +1,17 @@
+{
+  "files": {
+    "main.css": "/eschoolfrontend/static/css/main.e6c13ad2.css",
+    "main.js": "/eschoolfrontend/static/js/main.c6babc63.js",
+    "static/js/213.36b1b916.chunk.js": "/eschoolfrontend/static/js/213.36b1b916.chunk.js",
+    "static/js/732.59c18fe8.chunk.js": "/eschoolfrontend/static/js/732.59c18fe8.chunk.js",
+    "index.html": "/eschoolfrontend/index.html",
+    "main.e6c13ad2.css.map": "/eschoolfrontend/static/css/main.e6c13ad2.css.map",
+    "main.c6babc63.js.map": "/eschoolfrontend/static/js/main.c6babc63.js.map",
+    "213.36b1b916.chunk.js.map": "/eschoolfrontend/static/js/213.36b1b916.chunk.js.map",
+    "732.59c18fe8.chunk.js.map": "/eschoolfrontend/static/js/732.59c18fe8.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.e6c13ad2.css",
+    "static/js/main.c6babc63.js"
+  ]
+}
